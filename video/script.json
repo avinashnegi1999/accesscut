@@ -1,0 +1,183 @@
+{
+ "_note": "One voice line per entry. The film is timed to the generated audio: each line starts after the previous one ends plus `gap` seconds. `scene` says which tile the line belongs to; a new scene starts with its first line. Style: quiet, confident, one idea per line (apple/DESIGN.md).",
+ "voice": {
+  "name": "Suzie",
+  "model": "eleven_multilingual_v2",
+  "stability": 0.55,
+  "similarity_boost": 0.75,
+  "style": 0.1,
+  "speed": 0.92
+ },
+ "lines": [
+  {
+   "scene": "open",
+   "gap": 0.6,
+   "text": "A contractor's last day."
+  },
+  {
+   "scene": "open",
+   "gap": 0.5,
+   "text": "You remove their Payroll access."
+  },
+  {
+   "scene": "open",
+   "gap": 1.2,
+   "text": "They still have it."
+  },
+  {
+   "scene": "routes",
+   "gap": 1.0,
+   "text": "Because access is never just one grant."
+  },
+  {
+   "scene": "routes",
+   "gap": 0.4,
+   "text": "It flows through groups inside groups."
+  },
+  {
+   "scene": "routes",
+   "gap": 0.4,
+   "text": "Through service accounts, and on-call rotations."
+  },
+  {
+   "scene": "routes",
+   "gap": 0.4,
+   "text": "Through a break-glass account nobody remembers."
+  },
+  {
+   "scene": "routes",
+   "gap": 0.6,
+   "text": "Five routes. One person."
+  },
+  {
+   "scene": "keep",
+   "gap": 1.0,
+   "text": "And some access has to stay."
+  },
+  {
+   "scene": "keep",
+   "gap": 0.4,
+   "text": "Their training. Their data warehouse. Their pager."
+  },
+  {
+   "scene": "keep",
+   "gap": 0.4,
+   "text": "Cut the wrong edge, and someone else stops working."
+  },
+  {
+   "scene": "meet",
+   "gap": 1.0,
+   "text": "This is AccessCut."
+  },
+  {
+   "scene": "meet",
+   "gap": 0.4,
+   "text": "An agent plans the cut. A graph checks every step."
+  },
+  {
+   "scene": "run",
+   "gap": 1.0,
+   "text": "First, FalkorDB finds every route."
+  },
+  {
+   "scene": "run",
+   "gap": 0.6,
+   "text": "The agent proposes a plan."
+  },
+  {
+   "scene": "run",
+   "gap": 0.3,
+   "text": "It's rejected. The warehouse access would be lost, and the graph says which edges caused it."
+  },
+  {
+   "scene": "run",
+   "gap": 0.6,
+   "text": "So the agent swaps one edge."
+  },
+  {
+   "scene": "run",
+   "gap": 0.3,
+   "text": "One route is still open. It adds one more."
+  },
+  {
+   "scene": "run",
+   "gap": 0.3,
+   "text": "Accepted."
+  },
+  {
+   "scene": "run",
+   "gap": 0.8,
+   "text": "Then, mid-run, someone adds a new grant."
+  },
+  {
+   "scene": "run",
+   "gap": 0.3,
+   "text": "The plan is now stale. Applying it is refused."
+  },
+  {
+   "scene": "run",
+   "gap": 0.6,
+   "text": "The agent looks again, and replans."
+  },
+  {
+   "scene": "run",
+   "gap": 0.6,
+   "text": "Six edges disabled, in one atomic write."
+  },
+  {
+   "scene": "run",
+   "gap": 0.4,
+   "text": "Payroll is gone. Everything else stays."
+  },
+  {
+   "scene": "run",
+   "gap": 0.4,
+   "text": "And the result comes from the graph, not from the model."
+  },
+  {
+   "scene": "live",
+   "gap": 1.2,
+   "text": "This is the live demo. Same agent. Real FalkorDB."
+  },
+  {
+   "scene": "refuse",
+   "gap": 1.2,
+   "text": "Sometimes there is no safe cut."
+  },
+  {
+   "scene": "refuse",
+   "gap": 0.4,
+   "text": "So it says so, shows why, and changes nothing."
+  },
+  {
+   "scene": "query",
+   "gap": 1.0,
+   "text": "Underneath, one traversal does the judging."
+  },
+  {
+   "scene": "query",
+   "gap": 0.4,
+   "text": "Every route. Every plan. Every check."
+  },
+  {
+   "scene": "proof",
+   "gap": 1.0,
+   "text": "We tested it against an independent oracle."
+  },
+  {
+   "scene": "proof",
+   "gap": 0.4,
+   "text": "Twenty-four of twenty-four. And fifteen of fifteen on scenarios it had never seen."
+  },
+  {
+   "scene": "end",
+   "gap": 1.0,
+   "text": "AccessCut."
+  },
+  {
+   "scene": "end",
+   "gap": 0.4,
+   "text": "Remove someone's access. Every route. Nothing else."
+  }
+ ]
+}

@@ -1,0 +1,139 @@
+WEBVTT
+
+00:00:01.000 --> 00:00:04.762
+When a contractor leaves a company, their access has to be removed.
+
+00:00:05.762 --> 00:00:11.428
+Say Raj is leaving today, and must lose access to Payroll.
+
+00:00:12.927 --> 00:00:18.918
+The obvious fix is to delete the permission that gives them Payroll.
+
+00:00:20.418 --> 00:00:25.062
+But after you delete it, Raj can still open Payroll.
+
+00:00:26.562 --> 00:00:33.017
+That is because, in a real company, access is not a single switch. It is a network.
+
+00:00:34.017 --> 00:00:42.330
+People belong to groups. Groups belong to other groups. Some people can sign in as a service account.
+
+00:00:43.330 --> 00:00:47.092
+Every one of those links can lead to Payroll.
+
+00:00:48.592 --> 00:00:53.515
+Here, Raj reaches Payroll in five different ways.
+
+00:00:54.514 --> 00:00:56.047
+A direct permission.
+
+00:00:57.247 --> 00:00:58.640
+A chain of nested groups.
+
+00:01:00.140 --> 00:01:03.809
+An on-call team, and a service account.
+
+00:01:05.309 --> 00:01:08.235
+And an emergency "break-glass" account.
+
+00:01:09.734 --> 00:01:13.914
+To really remove access, all five paths have to be cut.
+
+00:01:15.914 --> 00:01:17.586
+But you cannot just cut everything.
+
+00:01:18.586 --> 00:01:24.577
+Raj still needs his training, the data warehouse, and the pager, for the rest of the day.
+
+00:01:26.077 --> 00:01:35.040
+And other people share the same groups. Priya still needs Payroll. Ayesha still needs the warehouse.
+
+00:01:36.539 --> 00:01:44.852
+So the real question is: which links can we cut, so that Payroll is closed, and nothing else breaks?
+
+00:01:46.852 --> 00:01:54.607
+AccessCut answers that question with an AI agent and a graph database, FalkorDB.
+
+00:01:55.608 --> 00:02:07.125
+The company's access is stored in FalkorDB as a graph. People, groups and resources are the points. Every permission is a line between them.
+
+00:02:08.625 --> 00:02:21.303
+The agent can only do four things. Look at the paths. Propose links to cut. Ask FalkorDB to check the proposal. And apply it.
+
+00:02:22.803 --> 00:02:28.747
+The agent decides what to try. FalkorDB decides whether it is safe.
+
+00:02:30.747 --> 00:02:32.790
+Here is a real run.
+
+00:02:33.791 --> 00:02:38.203
+First, FalkorDB finds all five paths from Raj to Payroll.
+
+00:02:40.202 --> 00:02:42.663
+The agent proposes cutting four links.
+
+00:02:44.164 --> 00:02:50.991
+FalkorDB rejects it. One of those cuts would also take away Raj's warehouse access.
+
+00:02:51.990 --> 00:02:56.727
+And it tells the agent exactly which two cuts caused that.
+
+00:02:58.727 --> 00:03:02.582
+So the agent swaps one cut for a different one.
+
+00:03:04.082 --> 00:03:08.865
+Now one path to Payroll is still open. So it adds one more cut.
+
+00:03:10.365 --> 00:03:15.706
+FalkorDB checks again. This time, the plan is accepted.
+
+00:03:17.706 --> 00:03:24.347
+But before the agent applies it, someone else in the company adds a new permission.
+
+00:03:25.846 --> 00:03:31.651
+That opens a sixth path to Payroll. The plan is now out of date.
+
+00:03:32.651 --> 00:03:38.874
+FalkorDB notices that the graph has changed, and refuses to apply the old plan.
+
+00:03:40.874 --> 00:03:47.608
+The agent looks at the graph again, finds the new path, and adds it to the plan.
+
+00:03:49.108 --> 00:03:54.727
+Now the plan is applied. Six links disabled, all at once.
+
+00:03:56.727 --> 00:04:08.198
+Finally, FalkorDB checks the result. Raj can no longer reach Payroll. And everything that had to stay is still there.
+
+00:04:10.198 --> 00:04:16.607
+Notice that the final answer comes from the graph, not from the AI's own words.
+
+00:04:18.607 --> 00:04:25.991
+This is the same thing running live, in the demo app, on a real FalkorDB database.
+
+00:04:37.991 --> 00:04:42.403
+Sometimes, removing access safely is impossible.
+
+00:04:43.903 --> 00:04:51.612
+Here, the only path to the wiki goes through protected links, that nobody is allowed to cut.
+
+00:04:53.112 --> 00:05:00.078
+So the agent says it cannot be done, shows why, and changes nothing.
+
+00:05:02.078 --> 00:05:04.679
+All of this rests on one graph query.
+
+00:05:06.178 --> 00:05:16.998
+It finds every path from a person to a resource. Give it a proposed cut, and it shows what would happen, without changing anything.
+
+00:05:18.999 --> 00:05:25.222
+We tested the agent against an independent checker that already knows the right answer.
+
+00:05:26.722 --> 00:05:37.450
+Each time FalkorDB gave the agent better feedback, it did better. From 11 out of 24 test cases, up to 24 out of 24.
+
+00:05:39.449 --> 00:05:45.486
+And on new cases it had never seen before, it passed 15 out of 15.
+
+00:05:47.486 --> 00:05:52.873
+AccessCut. Remove someone's access. Every path, and nothing else.

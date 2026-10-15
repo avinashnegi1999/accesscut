@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AccessCut — film</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* apple/DESIGN.md: full-bleed tiles alternating white / parchment / near-black, one blue for
+   highlights, 600-weight headlines with tight tracking, generous air, one idea per frame. */
+:root{--ink:#1d1d1f;--muted:#6e6e73;--blue:#0066cc;--sky:#2997ff;--parch:#f5f5f7;--tile:#272729;--mute-dark:#a1a1a6;
+      --red:#d70015;--orange:#e07000;--green:#1a7f37;--edge:#d2d2d7;--prot:#86868b}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fff}
+body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink)}
+section{position:absolute;inset:0;opacity:0;visibility:hidden}
+.white{background:#fff}.parch{background:var(--parch)}.dark{background:var(--tile);color:#f5f5f7}.black{background:#000;color:#f5f5f7}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.el{will-change:opacity,transform}
+.hero{font-size:150px;font-weight:600;letter-spacing:-.04em;line-height:1.02}
+.h1{font-size:96px;font-weight:600;letter-spacing:-.035em;line-height:1.05}
+.h2{font-size:68px;font-weight:600;letter-spacing:-.03em;line-height:1.08}
+.lead{font-size:42px;font-weight:400;letter-spacing:-.01em;line-height:1.3;color:var(--muted)}
+.dark .lead,.black .lead{color:var(--mute-dark)}
+.cap{position:absolute;left:0;right:0;bottom:44px;text-align:center;font-size:22px;color:var(--muted)}
+.dark .cap,.black .cap{color:#8e8e93}
+.blue{color:var(--blue)}.sky{color:var(--sky)}.red{color:var(--red)}.green{color:var(--green)}
+/* graph */
+svg text{font-family:Inter,sans-serif}
+.nrect{fill:#fff;stroke:#d2d2d7;stroke-width:2}
+.res .nrect{fill:var(--parch)}
+.ntext{font-size:25px;font-weight:600;fill:var(--ink)}
+.ring{fill:none;stroke-width:6;opacity:0}
+.elabel{font-size:19px;font-weight:600;fill:#8e8e93}
+.dark .nrect{fill:#3a3a3c;stroke:#48484a}.dark .res .nrect{fill:#2c2c2e}.dark .ntext{fill:#f5f5f7}
+/* run */
+.stage-head{position:absolute;top:56px;left:0;right:0;text-align:center}
+.card{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);width:1560px;text-align:center}
+.card .t{font-size:44px;font-weight:600;letter-spacing:-.02em}
+.card .d{margin-top:12px;font-size:32px;color:var(--muted);line-height:1.3}
+.card code{font:500 30px "JetBrains Mono",monospace;color:var(--ink);background:var(--parch);padding:2px 10px;border-radius:8px}
+.dots{position:absolute;top:150px;left:0;right:0;display:flex;justify-content:center;gap:14px}
+.dot{width:14px;height:14px;border-radius:50%;background:#d2d2d7}
+.dot.on{background:var(--blue)}
+.badge{display:inline-block;padding:16px 40px;border-radius:999px;font-size:40px;font-weight:600;color:#fff;background:var(--green)}
+/* meet */
+.steps{display:flex;gap:28px;margin-top:70px;align-items:center}
+.pill{padding:22px 44px;border-radius:999px;font-size:36px;font-weight:600;border:2px solid #d2d2d7;color:var(--ink)}
+.arrow{font-size:40px;color:#c7c7cc}
+.pill.who{font-size:20px;font-weight:600;color:var(--muted);border:none;padding:0;margin-top:10px}
+/* live */
+.frame{width:1560px;height:878px;border-radius:26px;overflow:hidden;box-shadow:rgba(0,0,0,.22) 3px 5px 30px;background:#fff;margin-top:26px}
+.frame video{width:100%;height:100%;display:block}
+.tag{font-size:26px;font-weight:600;color:#f5f5f7}.tag .dotlive{display:inline-block;width:14px;height:14px;border-radius:50%;background:#ff453a;margin-right:12px;vertical-align:middle}
+/* query */
+.code{width:1640px;border-radius:28px;background:#1d1d1f;text-align:left;overflow:hidden;margin-top:56px}
+.code .bar{background:#2c2c2e;padding:18px 36px;font:500 22px "JetBrains Mono",monospace;color:var(--mute-dark)}
+.code pre{font-variant-ligatures:none;font-feature-settings:"calt" 0,"liga" 0;padding:32px 36px;font:400 30px/1.65 "JetBrains Mono",ui-monospace,monospace;color:#f5f5f7}
+.code pre b{color:var(--sky);font-weight:400}
+.code pre i{font-style:normal;color:#ffd60a}
+/* proof */
+.bars{display:flex;gap:46px;align-items:flex-end;height:430px;margin-top:60px}
+.col{width:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.col .fill{width:100%;background:#d2d2d7;border-radius:14px 14px 4px 4px}
+.col.best .fill{background:var(--blue)}
+.col .n{font-size:40px;font-weight:600;margin-bottom:12px}
+.col .l{font-size:21px;color:var(--muted);margin-top:14px;height:56px;line-height:1.3}
+.held{margin-left:60px;padding-left:60px;border-left:2px solid #e0e0e0;height:100%;display:flex;flex-direction:column;justify-content:center;text-align:left}
+.held .n{font-size:120px;font-weight:600;letter-spacing:-.03em;color:var(--blue)}
+.held .l{font-size:28px;color:var(--muted)}
+.url{margin-top:50px;font-size:40px;font-weight:600;color:var(--blue)}
+</style>
+</head>
+<body>
+
+<section id="s-open" class="white center">
+  <div class="h1 el" id="o1">A contractor's last day.</div>
+  <div class="lead el" id="o2" style="margin-top:34px">You remove their Payroll access.</div>
+  <div class="h1 el red" id="o3" style="margin-top:70px">They still have it.</div>
+</section>
+
+<section id="s-stage" class="parch">
+  <div class="stage-head"><div class="h2 el" id="g1h"></div></div>
+  <svg id="g1" class="el" viewBox="0 -100 2200 960" width="1700" height="742" style="position:absolute;left:110px;top:150px"></svg>
+  <div class="card" style="bottom:44px"><div class="d el" id="g1c" style="font-size:36px"></div></div>
+</section>
+
+<section id="s-meet" class="white center">
+  <div class="hero el" id="m1">AccessCut</div>
+  <div class="lead el" id="m2" style="margin-top:22px">An agent plans the cut. A graph checks every step.</div>
+  <div class="steps el" id="m3">
+    <div><div class="pill">Inspect</div><div class="pill who">FalkorDB</div></div><div class="arrow">›</div>
+    <div><div class="pill">Propose</div><div class="pill who">the model</div></div><div class="arrow">›</div>
+    <div><div class="pill">Check</div><div class="pill who">FalkorDB</div></div><div class="arrow">›</div>
+    <div><div class="pill">Verify</div><div class="pill who">FalkorDB</div></div>
+  </div>
+</section>
+
+<section id="s-run" class="white">
+  <div class="stage-head"><div class="h2 el" id="rh" style="font-size:54px">Remove j.ortiz → payroll. Keep everything else.</div></div>
+  <div class="dots el" id="rdots"></div>
+  <svg id="g2" viewBox="0 -100 2200 960" width="1560" height="681" style="position:absolute;left:180px;top:165px"></svg>
+  <div class="card" id="rcard" style="bottom:52px"><div class="t" id="rt"></div><div class="d" id="rd"></div></div>
+  <div class="cap el" id="rcap" style="bottom:22px">Real run · gpt-5.4-mini · replayed step by step from video/trace_big_payroll.json</div>
+</section>
+
+<section id="s-live" class="black center">
+  <div class="tag el" id="l1"><span class="dotlive"></span>Live demo · same agent · real FalkorDB</div>
+  <div class="frame el" id="l2"><video id="vid" src="live.mp4" muted preload="auto" playsinline></video></div>
+</section>
+
+<section id="s-refuse" class="dark">
+  <div class="stage-head"><div class="h2 el" id="x1">Sometimes there is no safe cut.</div></div>
+  <svg id="g3" class="el" viewBox="0 -100 2200 960" width="1500" height="655" style="position:absolute;left:210px;top:180px"></svg>
+  <div class="card"><div class="d el" id="x2" style="color:#d1d1d6"></div></div>
+</section>
+
+<section id="s-query" class="parch center">
+  <div class="h2 el" id="q1">One traversal does the judging.</div>
+  <div class="code el" id="q2"><div class="bar">inspect · evaluate · verify</div><pre><b>MATCH</b> p=(u:Identity {id:$u})
+      -[:MEMBER_OF|CAN_ASSUME|GRANTS_ACCESS*1..8]->(r:Resource {id:$r})
+<b>WHERE</b> all(e IN relationships(p) <b>WHERE</b> e.enabled <b>AND NOT</b> e.id IN <i>$cut</i>)
+<b>RETURN</b> [e IN relationships(p) | e.id]</pre></div>
+  <div class="lead el" id="q3" style="margin-top:40px;font-size:34px">Pass a proposed <span style="font-family:'JetBrains Mono';color:#1d1d1f">$cut</span> to simulate it. Pass none to see the truth.</div>
+</section>
+
+<section id="s-proof" class="white center">
+  <div class="h2 el" id="p1">Tested against an independent oracle.</div>
+  <div class="bars el" id="p2">
+    <div class="col"><div class="n" id="pn0">11</div><div class="fill" id="pf0"></div><div class="l">routes and<br>reasons only</div></div>
+    <div class="col"><div class="n" id="pn1">20</div><div class="fill" id="pf1"></div><div class="l">+ what each<br>edge does</div></div>
+    <div class="col"><div class="n" id="pn2">23</div><div class="fill" id="pf2"></div><div class="l">+ safe fixes<br>per route</div></div>
+    <div class="col best"><div class="n" id="pn3">24</div><div class="fill" id="pf3"></div><div class="l">+ which edges<br>caused harm</div></div>
+    <div class="held el" id="p3"><div class="n">15/15</div><div class="l">on scenarios it<br>had never seen</div></div>
+  </div>
+  <div class="lead el" id="p4" style="margin-top:34px;font-size:28px">Passes out of 24 per version · gpt-5.4-mini · 3 runs per scenario · synthetic organizations</div>
+</section>
+
+<section id="s-end" class="white center">
+  <div class="hero el" id="e1">AccessCut</div>
+  <div class="lead el" id="e2" style="margin-top:22px">Remove someone's access. Every route. Nothing else.</div>
+  <div class="url el" id="e3">github.com/avinashnegi1999/accesscut</div>
+  <div class="cap el" id="e4">Built on FalkorDB · Graph Hacks · Agents That Act on Connected Data</div>
+</section>
+
+<script>
+const TM={"lines": [{"i": 0, "scene": "open", "text": "A contractor's last day.", "start": 0.6, "dur": 1.44}, {"i": 1, "scene": "open", "text": "You remove their Payroll access.", "start": 2.54, "dur": 1.811}, {"i": 2, "scene": "open", "text": "They still have it.", "start": 5.551, "dur": 1.486}, {"i": 3, "scene": "routes", "text": "Because access is never just one grant.", "start": 8.037, "dur": 2.183}, {"i": 4, "scene": "routes", "text": "It flows through groups inside groups.", "start": 10.62, "dur": 3.204}, {"i": 5, "scene": "routes", "text": "Through service accounts, and on-call rotations.", "start": 14.224, "dur": 3.762}, {"i": 6, "scene": "routes", "text": "Through a break-glass account nobody remembers.", "start": 18.386, "dur": 3.715}, {"i": 7, "scene": "routes", "text": "Five routes. One person.", "start": 22.701, "dur": 2.368}, {"i": 8, "scene": "keep", "text": "And some access has to stay.", "start": 26.069, "dur": 2.368}, {"i": 9, "scene": "keep", "text": "Their training. Their data warehouse. Their pager.", "start": 28.838, "dur": 3.529}, {"i": 10, "scene": "keep", "text": "Cut the wrong edge, and someone else stops working.", "start": 32.767, "dur": 4.319}, {"i": 11, "scene": "meet", "text": "This is AccessCut.", "start": 38.086, "dur": 1.765}, {"i": 12, "scene": "meet", "text": "An agent plans the cut. A graph checks every step.", "start": 40.251, "dur": 4.226}, {"i": 13, "scene": "run", "text": "First, FalkorDB finds every route.", "start": 45.477, "dur": 2.74}, {"i": 14, "scene": "run", "text": "The agent proposes a plan.", "start": 48.817, "dur": 2.136}, {"i": 15, "scene": "run", "text": "It's rejected. The warehouse access would be lost, and the graph says which edges caused it.", "start": 51.253, "dur": 8.545}, {"i": 16, "scene": "run", "text": "So the agent swaps one edge.", "start": 60.398, "dur": 2.786}, {"i": 17, "scene": "run", "text": "One route is still open. It adds one more.", "start": 63.484, "dur": 2.183}, {"i": 18, "scene": "run", "text": "Accepted.", "start": 65.967, "dur": 1.207}, {"i": 19, "scene": "run", "text": "Then, mid-run, someone adds a new grant.", "start": 67.974, "dur": 2.601}, {"i": 20, "scene": "run", "text": "The plan is now stale. Applying it is refused.", "start": 70.875, "dur": 4.551}, {"i": 21, "scene": "run", "text": "The agent looks again, and replans.", "start": 76.026, "dur": 3.529}, {"i": 22, "scene": "run", "text": "Six edges disabled, in one atomic write.", "start": 80.156, "dur": 3.483}, {"i": 23, "scene": "run", "text": "Payroll is gone. Everything else stays.", "start": 84.039, "dur": 3.855}, {"i": 24, "scene": "run", "text": "And the result comes from the graph, not from the model.", "start": 88.293, "dur": 5.108}, {"i": 25, "scene": "live", "text": "This is the live demo. Same agent. Real FalkorDB.", "start": 94.601, "dur": 4.876}, {"i": 26, "scene": "refuse", "text": "Sometimes there is no safe cut.", "start": 107.501, "dur": 2.508}, {"i": 27, "scene": "refuse", "text": "So it says so, shows why, and changes nothing.", "start": 110.409, "dur": 3.855}, {"i": 28, "scene": "query", "text": "Underneath, one traversal does the judging.", "start": 115.263, "dur": 4.18}, {"i": 29, "scene": "query", "text": "Every route. Every plan. Every check.", "start": 119.843, "dur": 3.994}, {"i": 30, "scene": "proof", "text": "We tested it against an independent oracle.", "start": 124.837, "dur": 2.879}, {"i": 31, "scene": "proof", "text": "Twenty-four of twenty-four. And fifteen of fifteen on scenarios it had never seen.", "start": 128.116, "dur": 7.059}, {"i": 32, "scene": "end", "text": "AccessCut.", "start": 136.175, "dur": 1.765}, {"i": 33, "scene": "end", "text": "Remove someone's access. Every route. Nothing else.", "start": 138.34, "dur": 2.879}], "scenes": [{"id": "open", "start": 0.0, "end": 7.686999999999999}, {"id": "routes", "start": 7.337, "end": 25.719}, {"id": "keep", "start": 25.369, "end": 37.736000000000004}, {"id": "meet", "start": 37.386, "end": 45.127}, {"id": "run", "start": 44.777, "end": 94.25099999999999}, {"id": "live", "start": 93.901, "end": 107.151}, {"id": "refuse", "start": 106.801, "end": 114.913}, {"id": "query", "start": 114.563, "end": 124.487}, {"id": "proof", "start": 124.137, "end": 135.825}, {"id": "end", "start": 135.475, "end": 144.219}], "total": 144.219, "measured": 34}, RUN={"model": "gpt-5.4-mini", "attempt": 2, "result": {"status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": [], "calls": 8, "rejected_applies": 1, "claimed_infeasible": false, "said": "Completed: j.ortiz\u2019s access to payroll has been removed, and all preserved pairs remain intact."}, "events": [{"kind": "request", "ask": "Remove j.ortiz's access to payroll. Preserve: [['j.ortiz', 'training'], ['j.ortiz', 'warehouse'], ['j.ortiz', 'pager'], ['m.chen', 'warehouse'], ['r.patel', 'payroll']].", "model": "gpt-5.4-mini", "req": {"identity": "j.ortiz", "resource": "payroll", "preserve": [["j.ortiz", "training"], ["j.ortiz", "warehouse"], ["j.ortiz", "pager"], ["m.chen", "warehouse"], ["r.patel", "payroll"]], "inject": ["b30", "MEMBER_OF", "vendor-acme", "finance-all"], "not_applicable_preserve": []}}, {"kind": "tool", "name": "inspect_access", "args": "{}", "out": {"rev": 0, "paths": [["b1", "b2", "b3", "b4", "b5", "b6"], ["b17", "b18", "b19", "b5", "b6"], ["b21", "b22"], ["b24"], ["b8", "b9", "b10"]], "edges": {"b8": {"type": "CAN_ASSUME", "src": "j.ortiz", "dst": "svc.etl", "enabled": true, "removable": true, "protected": false}, "b21": {"type": "CAN_ASSUME", "src": "j.ortiz", "dst": "break.glass", "enabled": true, "removable": true, "protected": false}, "b1": {"type": "MEMBER_OF", "src": "j.ortiz", "dst": "vendor-acme", "enabled": true, "removable": true, "protected": false}, "b17": {"type": "MEMBER_OF", "src": "j.ortiz", "dst": "oncall", "enabled": true, "removable": true, "protected": false}, "b24": {"type": "GRANTS_ACCESS", "src": "j.ortiz", "dst": "payroll", "enabled": true, "removable": true, "protected": false}, "b9": {"type": "CAN_ASSUME", "src": "svc.etl", "dst": "svc.bi", "enabled": true, "removable": true, "protected": false}, "b10": {"type": "GRANTS_ACCESS", "src": "svc.bi", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, "b22": {"type": "GRANTS_ACCESS", "src": "break.glass", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, "b2": {"type": "MEMBER_OF", "src": "vendor-acme", "dst": "contractors", "enabled": true, "removable": true, "protected": false}, "b3": {"type": "MEMBER_OF", "src": "contractors", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, "b4": {"type": "MEMBER_OF", "src": "data-team", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, "b5": {"type": "MEMBER_OF", "src": "finance-readers", "dst": "finance-all", "enabled": true, "removable": false, "protected": true}, "b6": {"type": "GRANTS_ACCESS", "src": "finance-all", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, "b18": {"type": "MEMBER_OF", "src": "oncall", "dst": "eng", "enabled": true, "removable": true, "protected": false}, "b19": {"type": "MEMBER_OF", "src": "eng", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}}, "blocking_paths": [], "edge_impact": {"b1": {"closes_routes": [["b1", "b2", "b3", "b4", "b5", "b6"]], "breaks_preserved": [["j.ortiz", "training"]]}, "b17": {"closes_routes": [["b17", "b18", "b19", "b5", "b6"]], "breaks_preserved": [["j.ortiz", "pager"]]}, "b18": {"closes_routes": [["b17", "b18", "b19", "b5", "b6"]], "breaks_preserved": []}, "b19": {"closes_routes": [["b17", "b18", "b19", "b5", "b6"]], "breaks_preserved": [["r.patel", "payroll"]]}, "b2": {"closes_routes": [["b1", "b2", "b3", "b4", "b5", "b6"]], "breaks_preserved": [["j.ortiz", "training"]]}, "b21": {"closes_routes": [["b21", "b22"]], "breaks_preserved": []}, "b24": {"closes_routes": [["b24"]], "breaks_preserved": []}, "b3": {"closes_routes": [["b1", "b2", "b3", "b4", "b5", "b6"]], "breaks_preserved": []}, "b4": {"closes_routes": [["b1", "b2", "b3", "b4", "b5", "b6"]], "breaks_preserved": []}, "b8": {"closes_routes": [["b8", "b9", "b10"]], "breaks_preserved": []}, "b9": {"closes_routes": [["b8", "b9", "b10"]], "breaks_preserved": []}}}}, {"kind": "tool", "name": "evaluate_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b8\"],\"rev\":0}", "out": {"ok": false, "rev": 0, "reasons": ["ROUTES_REMAIN: [('b21', 'b22')]", "COLLATERAL: j.ortiz->warehouse lost; dropping any of ['b3', 'b8'] from the plan restores it"], "remaining": [["b21", "b22"]], "safe_additions_per_open_route": {"b21 > b22": []}}}, {"kind": "tool", "name": "evaluate_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b21\"],\"rev\":0}", "out": {"ok": false, "rev": 0, "reasons": ["ROUTES_REMAIN: [('b8', 'b9', 'b10')]"], "remaining": [["b8", "b9", "b10"]], "safe_additions_per_open_route": {"b8 > b9 > b10": ["b9"]}}}, {"kind": "tool", "name": "evaluate_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b9\",\"b21\"],\"rev\":0}", "out": {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}}, {"kind": "inject", "edge": "b30", "type": "MEMBER_OF", "src": "vendor-acme", "dst": "finance-all", "rev": 1}, {"kind": "tool", "name": "apply_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b9\",\"b21\"],\"rev\":0}", "out": {"status": "REJECTED", "ok": false, "rev": 1, "reasons": ["STALE: plan rev 0, graph rev 1", "ROUTES_REMAIN: [('b1', 'b30', 'b6')]"], "remaining": [["b1", "b30", "b6"]], "safe_additions_per_open_route": {"b1 > b30 > b6": ["b30"]}}}, {"kind": "tool", "name": "evaluate_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b9\",\"b21\",\"b30\"],\"rev\":1}", "out": {"ok": true, "rev": 1, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}}, {"kind": "tool", "name": "apply_plan", "args": "{\"edge_ids\":[\"b24\",\"b3\",\"b18\",\"b9\",\"b21\",\"b30\"],\"rev\":1}", "out": {"status": "APPLIED", "cut": ["b24", "b3", "b18", "b9", "b21", "b30"], "from_rev": 1, "to_rev": 2}}, {"kind": "tool", "name": "verify", "args": "{}", "out": {"status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": []}}, {"kind": "model", "text": "Completed: j.ortiz\u2019s access to payroll has been removed, and all preserved pairs remain intact."}, {"kind": "outcome", "status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": [], "edges": [{"id": "b8", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "svc.etl", "enabled": true, "removable": true, "protected": false}, {"id": "b21", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "break.glass", "enabled": false, "removable": true, "protected": false}, {"id": "b1", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "vendor-acme", "enabled": true, "removable": true, "protected": false}, {"id": "b17", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "oncall", "enabled": true, "removable": true, "protected": false}, {"id": "b13", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "all-staff", "enabled": true, "removable": false, "protected": true}, {"id": "b24", "type": "GRANTS_ACCESS", "src": "j.ortiz", "dst": "payroll", "enabled": false, "removable": true, "protected": false}, {"id": "b15", "type": "MEMBER_OF", "src": "m.chen", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b23", "type": "MEMBER_OF", "src": "r.patel", "dst": "eng", "enabled": true, "removable": true, "protected": false}, {"id": "b26", "type": "MEMBER_OF", "src": "k.wu", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b9", "type": "CAN_ASSUME", "src": "svc.etl", "dst": "svc.bi", "enabled": false, "removable": true, "protected": false}, {"id": "b11", "type": "GRANTS_ACCESS", "src": "svc.etl", "dst": "warehouse", "enabled": true, "removable": false, "protected": true}, {"id": "b10", "type": "GRANTS_ACCESS", "src": "svc.bi", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b22", "type": "GRANTS_ACCESS", "src": "break.glass", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b2", "type": "MEMBER_OF", "src": "vendor-acme", "dst": "contractors", "enabled": true, "removable": true, "protected": false}, {"id": "b30", "type": "MEMBER_OF", "src": "vendor-acme", "dst": "finance-all", "enabled": false, "removable": true, "protected": false}, {"id": "b3", "type": "MEMBER_OF", "src": "contractors", "dst": "data-team", "enabled": false, "removable": true, "protected": false}, {"id": "b12", "type": "GRANTS_ACCESS", "src": "contractors", "dst": "training", "enabled": true, "removable": true, "protected": false}, {"id": "b4", "type": "MEMBER_OF", "src": "data-team", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b16", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "warehouse", "enabled": true, "removable": true, "protected": false}, {"id": "b25", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "notebooks", "enabled": true, "removable": true, "protected": false}, {"id": "b5", "type": "MEMBER_OF", "src": "finance-readers", "dst": "finance-all", "enabled": true, "removable": false, "protected": true}, {"id": "b7", "type": "GRANTS_ACCESS", "src": "finance-readers", "dst": "ledger", "enabled": true, "removable": false, "protected": true}, {"id": "b6", "type": "GRANTS_ACCESS", "src": "finance-all", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b18", "type": "MEMBER_OF", "src": "oncall", "dst": "eng", "enabled": false, "removable": true, "protected": false}, {"id": "b20", "type": "GRANTS_ACCESS", "src": "oncall", "dst": "pager", "enabled": true, "removable": false, "protected": true}, {"id": "b19", "type": "MEMBER_OF", "src": "eng", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b14", "type": "GRANTS_ACCESS", "src": "all-staff", "dst": "wiki", "enabled": true, "removable": false, "protected": true}]}]}, REFUSE={"model": "gpt-5.4-mini", "attempt": 1, "result": {"status": "UNMET", "rev": 0, "remaining": [["b13", "b14"]], "lost_preserved": [], "calls": 1, "rejected_applies": 0, "claimed_infeasible": true, "said": "INFEASIBLE: the only access route to wiki is the blocking path `j.ortiz -MEMBER_OF-> all-staff -GRANTS_ACCESS-> wiki`, and both edges on that route are protected/non-removable, so there is no permitted edit to close it."}, "events": [{"kind": "request", "ask": "Remove j.ortiz's access to wiki. Preserve: [].", "model": "gpt-5.4-mini", "req": {"identity": "j.ortiz", "resource": "wiki", "preserve": [], "not_applicable_preserve": []}}, {"kind": "tool", "name": "inspect_access", "args": "{}", "out": {"rev": 0, "paths": [["b13", "b14"]], "edges": {"b13": {"type": "MEMBER_OF", "src": "j.ortiz", "dst": "all-staff", "enabled": true, "removable": false, "protected": true}, "b14": {"type": "GRANTS_ACCESS", "src": "all-staff", "dst": "wiki", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [["b13", "b14"]], "edge_impact": {}}}, {"kind": "model", "text": "INFEASIBLE: the only access route to wiki is the blocking path `j.ortiz -MEMBER_OF-> all-staff -GRANTS_ACCESS-> wiki`, and both edges on that route are protected/non-removable, so there is no permitted edit to close it."}, {"kind": "outcome", "status": "UNMET", "rev": 0, "remaining": [["b13", "b14"]], "lost_preserved": [], "edges": [{"id": "b8", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "svc.etl", "enabled": true, "removable": true, "protected": false}, {"id": "b21", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "break.glass", "enabled": true, "removable": true, "protected": false}, {"id": "b1", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "vendor-acme", "enabled": true, "removable": true, "protected": false}, {"id": "b17", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "oncall", "enabled": true, "removable": true, "protected": false}, {"id": "b13", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "all-staff", "enabled": true, "removable": false, "protected": true}, {"id": "b24", "type": "GRANTS_ACCESS", "src": "j.ortiz", "dst": "payroll", "enabled": true, "removable": true, "protected": false}, {"id": "b15", "type": "MEMBER_OF", "src": "m.chen", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b23", "type": "MEMBER_OF", "src": "r.patel", "dst": "eng", "enabled": true, "removable": true, "protected": false}, {"id": "b26", "type": "MEMBER_OF", "src": "k.wu", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b9", "type": "CAN_ASSUME", "src": "svc.etl", "dst": "svc.bi", "enabled": true, "removable": true, "protected": false}, {"id": "b11", "type": "GRANTS_ACCESS", "src": "svc.etl", "dst": "warehouse", "enabled": true, "removable": false, "protected": true}, {"id": "b10", "type": "GRANTS_ACCESS", "src": "svc.bi", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b22", "type": "GRANTS_ACCESS", "src": "break.glass", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b2", "type": "MEMBER_OF", "src": "vendor-acme", "dst": "contractors", "enabled": true, "removable": true, "protected": false}, {"id": "b3", "type": "MEMBER_OF", "src": "contractors", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b12", "type": "GRANTS_ACCESS", "src": "contractors", "dst": "training", "enabled": true, "removable": true, "protected": false}, {"id": "b4", "type": "MEMBER_OF", "src": "data-team", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b16", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "warehouse", "enabled": true, "removable": true, "protected": false}, {"id": "b25", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "notebooks", "enabled": true, "removable": true, "protected": false}, {"id": "b5", "type": "MEMBER_OF", "src": "finance-readers", "dst": "finance-all", "enabled": true, "removable": false, "protected": true}, {"id": "b7", "type": "GRANTS_ACCESS", "src": "finance-readers", "dst": "ledger", "enabled": true, "removable": false, "protected": true}, {"id": "b6", "type": "GRANTS_ACCESS", "src": "finance-all", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b18", "type": "MEMBER_OF", "src": "oncall", "dst": "eng", "enabled": true, "removable": true, "protected": false}, {"id": "b20", "type": "GRANTS_ACCESS", "src": "oncall", "dst": "pager", "enabled": true, "removable": false, "protected": true}, {"id": "b19", "type": "MEMBER_OF", "src": "eng", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b14", "type": "GRANTS_ACCESS", "src": "all-staff", "dst": "wiki", "enabled": true, "removable": false, "protected": true}]}]}, FX={"nodes": [{"id": "j.ortiz", "label": "Identity"}, {"id": "m.chen", "label": "Identity"}, {"id": "r.patel", "label": "Identity"}, {"id": "k.wu", "label": "Identity"}, {"id": "svc.etl", "label": "Identity"}, {"id": "svc.bi", "label": "Identity"}, {"id": "break.glass", "label": "Identity"}, {"id": "vendor-acme", "label": "Group"}, {"id": "contractors", "label": "Group"}, {"id": "data-team", "label": "Group"}, {"id": "finance-readers", "label": "Group"}, {"id": "finance-all", "label": "Group"}, {"id": "oncall", "label": "Group"}, {"id": "eng", "label": "Group"}, {"id": "all-staff", "label": "Group"}, {"id": "payroll", "label": "Resource"}, {"id": "ledger", "label": "Resource"}, {"id": "training", "label": "Resource"}, {"id": "wiki", "label": "Resource"}, {"id": "warehouse", "label": "Resource"}, {"id": "notebooks", "label": "Resource"}, {"id": "pager", "label": "Resource"}], "edges": [{"id": "b1", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "vendor-acme", "enabled": true, "removable": true, "protected": false}, {"id": "b2", "type": "MEMBER_OF", "src": "vendor-acme", "dst": "contractors", "enabled": true, "removable": true, "protected": false}, {"id": "b3", "type": "MEMBER_OF", "src": "contractors", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b4", "type": "MEMBER_OF", "src": "data-team", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b5", "type": "MEMBER_OF", "src": "finance-readers", "dst": "finance-all", "enabled": true, "removable": false, "protected": true}, {"id": "b6", "type": "GRANTS_ACCESS", "src": "finance-all", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b7", "type": "GRANTS_ACCESS", "src": "finance-readers", "dst": "ledger", "enabled": true, "removable": false, "protected": true}, {"id": "b8", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "svc.etl", "enabled": true, "removable": true, "protected": false}, {"id": "b9", "type": "CAN_ASSUME", "src": "svc.etl", "dst": "svc.bi", "enabled": true, "removable": true, "protected": false}, {"id": "b10", "type": "GRANTS_ACCESS", "src": "svc.bi", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b11", "type": "GRANTS_ACCESS", "src": "svc.etl", "dst": "warehouse", "enabled": true, "removable": false, "protected": true}, {"id": "b12", "type": "GRANTS_ACCESS", "src": "contractors", "dst": "training", "enabled": true, "removable": true, "protected": false}, {"id": "b13", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "all-staff", "enabled": true, "removable": false, "protected": true}, {"id": "b14", "type": "GRANTS_ACCESS", "src": "all-staff", "dst": "wiki", "enabled": true, "removable": false, "protected": true}, {"id": "b15", "type": "MEMBER_OF", "src": "m.chen", "dst": "data-team", "enabled": true, "removable": true, "protected": false}, {"id": "b16", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "warehouse", "enabled": true, "removable": true, "protected": false}, {"id": "b17", "type": "MEMBER_OF", "src": "j.ortiz", "dst": "oncall", "enabled": true, "removable": true, "protected": false}, {"id": "b18", "type": "MEMBER_OF", "src": "oncall", "dst": "eng", "enabled": true, "removable": true, "protected": false}, {"id": "b19", "type": "MEMBER_OF", "src": "eng", "dst": "finance-readers", "enabled": true, "removable": true, "protected": false}, {"id": "b20", "type": "GRANTS_ACCESS", "src": "oncall", "dst": "pager", "enabled": true, "removable": false, "protected": true}, {"id": "b21", "type": "CAN_ASSUME", "src": "j.ortiz", "dst": "break.glass", "enabled": true, "removable": true, "protected": false}, {"id": "b22", "type": "GRANTS_ACCESS", "src": "break.glass", "dst": "payroll", "enabled": true, "removable": false, "protected": true}, {"id": "b23", "type": "MEMBER_OF", "src": "r.patel", "dst": "eng", "enabled": true, "removable": true, "protected": false}, {"id": "b24", "type": "GRANTS_ACCESS", "src": "j.ortiz", "dst": "payroll", "enabled": true, "removable": true, "protected": false}, {"id": "b25", "type": "GRANTS_ACCESS", "src": "data-team", "dst": "notebooks", "enabled": true, "removable": true, "protected": false}, {"id": "b26", "type": "MEMBER_OF", "src": "k.wu", "dst": "data-team", "enabled": true, "removable": true, "protected": false}], "requests": {"payroll": {"identity": "j.ortiz", "resource": "payroll", "preserve": [["j.ortiz", "training"], ["j.ortiz", "warehouse"], ["j.ortiz", "pager"], ["m.chen", "warehouse"], ["r.patel", "payroll"]], "inject": ["b30", "MEMBER_OF", "vendor-acme", "finance-all"]}, "ledger": {"identity": "j.ortiz", "resource": "ledger", "preserve": [["r.patel", "ledger"], ["j.ortiz", "training"], ["j.ortiz", "pager"]]}, "warehouse": {"identity": "m.chen", "resource": "warehouse", "preserve": [["m.chen", "notebooks"], ["k.wu", "warehouse"]]}, "wiki": {"identity": "j.ortiz", "resource": "wiki", "preserve": []}}};
+const $=id=>document.getElementById(id);
+const clamp=x=>x<0?0:x>1?1:x, ease=x=>1-Math.pow(1-clamp(x),3);
+function rise(id,t,start,d=0.9,dy=36){const p=ease((t-start)/d),e=$(id);e.style.opacity=p;e.style.transform=`translateY(${(1-p)*dy}px)`;}
+function fadeOut(id,t,start,d=0.5){const e=$(id);e.style.opacity=Math.min(+e.style.opacity||0,1-clamp((t-start)/d));}
+
+/* ---- timing: line k of a scene ---- */
+const BY={};for(const l of TM.lines)(BY[l.scene]??=[]).push(l);
+const L=(scene,k)=>BY[scene][k].start;
+const SEC={open:'s-open',routes:'s-stage',keep:'s-stage',meet:'s-meet',run:'s-run',live:'s-live',refuse:'s-refuse',query:'s-query',proof:'s-proof',end:'s-end'};
+const SPAN={};for(const s of TM.scenes){const id=SEC[s.id];SPAN[id]=SPAN[id]?[Math.min(SPAN[id][0],s.start),Math.max(SPAN[id][1],s.end)]:[s.start,s.end];}
+
+/* ---- the big organization, hand-placed for 1080p ---- */
+const POS={'r.patel':[140,130],'j.ortiz':[140,420],'m.chen':[140,640],'k.wu':[140,750],
+  'break.glass':[490,40],'svc.etl':[490,190],'vendor-acme':[490,330],'oncall':[490,500],'all-staff':[490,790],
+  'svc.bi':[820,110],'contractors':[820,330],'eng':[820,560],'data-team':[1130,420],'finance-readers':[1440,300],'finance-all':[1740,170],
+  'payroll':[2050,60],'ledger':[2050,300],'warehouse':[2050,430],'notebooks':[2050,530],'training':[2050,630],'pager':[2050,730],'wiki':[2050,820]};
+const KIND=Object.fromEntries(FX.nodes.map(n=>[n.id,n.label]));
+const INJ=RUN.events.find(e=>e.kind==='inject');
+const EDGES=[...FX.edges.map(e=>({...e})),{id:INJ.edge,type:INJ.type,src:INJ.src,dst:INJ.dst,protected:false,injected:true}];
+const PROT=new Set(EDGES.filter(e=>e.protected).map(e=>e.id));
+const NW=230,NH=58;
+const BEND={b24:-300,b22:-40,b10:-60,b30:-150,b11:40,b12:30,b23:0};
+function geom(e){const [x1,y1]=POS[e.src],[x2,y2]=POS[e.dst];const sx=x1+NW/2,ex=x2-NW/2-12,dy=BEND[e.id]||0,mx=(sx+ex)/2;
+  return {d:`M${sx},${y1} C${mx},${y1+dy} ${mx},${y2+dy} ${ex},${y2}`,lx:mx,ly:(y1+y2)/2+dy*.75-12};}
+function buildGraph(svg){
+  let h=`<defs><marker id="${svg}-m" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="18" markerHeight="18" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>`;
+  for(const e of EDGES){const g=geom(e);
+    h+=`<path id="${svg}-${e.id}" d="${g.d}" fill="none" stroke-linecap="round" marker-end="url(#${svg}-m)"/>`+
+       `<text id="${svg}-${e.id}-l" class="elabel" x="${g.lx}" y="${g.ly}" text-anchor="middle">${e.id}${e.protected?' 🔒':''}</text>`;}
+  for(const [n,[x,y]] of Object.entries(POS)){const k=KIND[n];
+    h+=`<g class="${k==='Resource'?'res':''}"><rect class="nrect" x="${x-NW/2}" y="${y-NH/2}" width="${NW}" height="${NH}" rx="${k==='Resource'?16:k==='Group'?8:29}"/>`+
+       `<rect id="${svg}-n-${n}" class="ring" x="${x-NW/2-7}" y="${y-NH/2-7}" width="${NW+14}" height="${NH+14}" rx="${k==='Resource'?22:k==='Group'?14:36}"/>`+
+       `<text class="ntext" x="${x}" y="${y+9}" text-anchor="middle">${n}</text></g>`;}
+  $(svg).innerHTML=h;}
+const STY={base:['var(--edge)',3,'',1],prot:['var(--prot)',3,'',1],dim:['var(--edge)',3,'',.35],route:['var(--blue)',7,'',1],
+  hot:['var(--blue)',10,'',1],prop:['var(--red)',7,'2 13',1],plan:['var(--red)',7,'16 11',1],culprit:['var(--red)',11,'',1],
+  inj:['var(--orange)',9,'',1],cut:['var(--red)',7,'16 11',1],faded:['var(--red)',5,'2 13',.35],hidden:['var(--edge)',3,'',0],keep:['var(--green)',7,'',1]};
+function paint(svg,state,nodes={},darkBase=false){
+  for(const e of EDGES){let s=state[e.id]||(e.injected?'hidden':PROT.has(e.id)?'prot':'base');
+    const [c,w,da,o]=STY[s];const p=$(`${svg}-${e.id}`),l=$(`${svg}-${e.id}-l`);
+    p.style.stroke=darkBase&&(s==='base'||s==='prot')?(s==='prot'?'#8e8e93':'#48484a'):c;p.style.strokeWidth=w;p.style.strokeDasharray=da;p.style.opacity=o;l.style.opacity=o;}
+  for(const n of Object.keys(POS)){const r=$(`${svg}-n-${n}`),v=nodes[n];
+    r.style.opacity=v?1:0;if(v)r.style.stroke=v==='green'?'var(--green)':v==='red'?'var(--red)':v==='gray'?'#8e8e93':'var(--blue)';}}
+buildGraph('g1');buildGraph('g2');buildGraph('g3');
+
+/* ---- routes, from the recorded inspect step ---- */
+const INSPECT=RUN.events.find(e=>e.kind==='tool'&&e.name==='inspect_access').out;
+const ROUTES=INSPECT.paths;  // five real routes
+const pick=f=>ROUTES.filter(f);
+const ROUTE_STEPS=[ // which real routes light up on which 'routes' line
+  {k:0,routes:pick(p=>p.length===1),label:'a direct grant'},
+  {k:1,routes:pick(p=>p[0]==='b1'),label:'groups inside groups'},
+  {k:2,routes:pick(p=>p[0]==='b8'||p[0]==='b17'),label:'a service account and an on-call rotation'},
+  {k:3,routes:pick(p=>p[0]==='b21'),label:'a break-glass account'}];
+const PRESERVE=RUN.events.find(e=>e.kind==='request').req.preserve;
+
+/* ---- run steps, straight from the recorded trace ---- */
+const STEPS=RUN.events.filter(e=>e.kind==='tool'||e.kind==='inject');
+const EXPECT=['inspect_access','evaluate_plan','evaluate_plan','evaluate_plan','inject','apply_plan','evaluate_plan','apply_plan','verify'];
+const got=STEPS.map(s=>s.kind==='inject'?'inject':s.name);
+if(JSON.stringify(got)!==JSON.stringify(EXPECT))throw new Error('trace shape changed: '+got.join(','));
+const MAP=[[0],[1,2],[3],[4,5],[6],[7],[8],[9],[10]].map(m=>m.length===1?[m[0],m[0]]:m);  // [line it appears on, line its verdict shows on]
+const args=s=>{try{return JSON.parse(s.args).edge_ids||[]}catch(e){return[]}};
+const tup=s=>[...s.matchAll(/\(([^)]*)\)/g)].map(m=>m[1].replace(/'|\s/g,'').split(',').filter(Boolean));
+function readable(r){
+  let m;
+  if(m=r.match(/^COLLATERAL: (\S+)->(\S+) lost; dropping any of \[(.*)\]/))return {txt:`${m[1]} would lose <b>${m[2]}</b>. Caused by ${m[3].replace(/'/g,'').split(', ').map(x=>`<code>${x}</code>`).join(' together with ')}.`,lost:m[2],culprits:m[3].replace(/'/g,'').split(', ')};
+  if(m=r.match(/^ROUTES_REMAIN: (.*)$/)){const rs=tup(m[1]);return {txt:`Still open: ${rs.map(p=>`<code>${p.join(' › ')}</code>`).join(', ')}`,open:rs};}
+  if(m=r.match(/^STALE: plan rev (\d+), graph rev (\d+)/))return {txt:`Planned at revision ${m[1]}. The graph is now at revision ${m[2]}.`,stale:true};
+  return {txt:r};}
+function stepView(i,verdictShown){
+  const s=STEPS[i];
+  if(s.kind==='inject')return {t:'Someone adds a grant',d:`<code>${s.edge}</code> ${s.src} → ${s.dst} · revision ${s.rev}`};
+  const o=s.out;
+  if(s.name==='inspect_access')return {t:`FalkorDB finds ${o.paths.length} routes`,d:`from j.ortiz to payroll, ${Math.min(...o.paths.map(p=>p.length))} to ${Math.max(...o.paths.map(p=>p.length))} edges deep`};
+  if(s.name==='evaluate_plan'){const ids=args(s);const head=`The agent proposes: ${ids.map(x=>`<code>${x}</code>`).join(' ')}`;
+    if(!verdictShown)return {t:'The agent proposes a cut',d:head};
+    if(o.ok)return {t:'Accepted',d:head};
+    const rs=o.reasons.map(readable).sort((a,b)=>(a.lost?0:1)-(b.lost?0:1));return {t:'Rejected',d:rs.map(r=>r.txt).join('<br>'),rs};}
+  if(s.name==='apply_plan'){if(o.status==='APPLIED')return {t:`${o.cut.length} edges disabled in one atomic write`,d:`revision ${o.from_rev} → ${o.to_rev}`};
+    const rs=o.reasons.map(readable);return {t:'Applying is refused: the plan is stale',d:rs.map(r=>r.txt).join('<br>'),rs};}
+  if(s.name==='verify')return {t:'Payroll is gone. Everything else stays.',d:'Read from the graph: no route left, every preserved access intact.'};}
+$('rdots').innerHTML=STEPS.map((_,i)=>`<div class="dot" id="dot${i}"></div>`).join('');
+let shownKey='';
+function runState(t){
+  const st={},nodes={'j.ortiz':'blue','payroll':'blue'};let cur=-1,verdict=false;
+  STEPS.forEach((s,i)=>{if(t>=L('run',MAP[i][0]))cur=i;});
+  if(cur<0)return {st,nodes,cur,verdict};
+  const routes=new Set(INSPECT.paths.flat());let cut=[],injOn=false;
+  for(let i=0;i<=cur;i++){const s=STEPS[i];
+    if(s.kind==='inject')injOn=true;
+    if(s.kind==='tool'&&s.name==='apply_plan'&&s.out.status==='APPLIED')cut=s.out.cut;}
+  for(const id of routes)st[id]='route';
+  if(injOn){st[INJ.edge]='inj';}
+  const s=STEPS[cur];verdict=t>=L('run',MAP[cur][1]);
+  if(s.kind==='tool'&&s.name==='evaluate_plan'){for(const id of args(s))st[id]=verdict&&s.out.ok?'plan':'prop';
+    if(verdict&&!s.out.ok)for(const r of s.out.reasons.map(readable)){
+      if(r.lost){nodes[r.lost]='red';for(const c of r.culprits)st[c]='culprit';}
+      if(r.open)for(const p of r.open)for(const id of p)if(!args(s).includes(id))st[id]='hot';}}
+  if(s.kind==='tool'&&s.name==='apply_plan'&&s.out.status!=='APPLIED'){for(const id of args(s))st[id]='faded';
+    for(const r of s.out.reasons.map(readable))if(r.open)for(const p of r.open)for(const id of p)st[id]=id===INJ.edge?'inj':'hot';}
+  if(cut.length){for(const id of routes)st[id]='dim';if(injOn)st[INJ.edge]='dim';for(const id of cut)st[id]='cut';nodes.payroll='gray';}
+  if(s.kind==='tool'&&s.name==='verify')for(const [u,r] of PRESERVE){if(u==='j.ortiz')nodes[r]='green';else nodes[u]='green';}
+  return {st,nodes,cur,verdict};}
+
+/* ---- refusal, from the recorded wiki trace ---- */
+const RI=REFUSE.events.find(e=>e.kind==='tool'&&e.name==='inspect_access').out;
+const RSAID=REFUSE.events.filter(e=>e.kind==='model').map(e=>e.text).pop();
+$('x2').innerHTML=`Only route: <span class="sky">${RI.paths[0].join(' › ')}</span>, every edge protected.<br>The agent answers <span class="sky">“INFEASIBLE”</span> with that evidence. The graph stays at revision ${REFUSE.result.rev}.`;
+
+/* ---- live video seeking (the recorder waits for it) ---- */
+const vid=$('vid');
+function seekTo(x){if(!vid.duration||Math.abs(vid.currentTime-x)<1/120)return null;
+  return new Promise(r=>{vid.addEventListener('seeked',r,{once:true});vid.currentTime=x;});}
+
+function render(t){
+  for(const [id,[a,b]] of Object.entries(SPAN)){const o=a===0?clamp((b-t)/0.7):Math.min(clamp((t-a)/0.7),clamp((b-t)/0.7));
+    const e=$(id);e.style.opacity=o;e.style.visibility=o>0?'visible':'hidden';}
+  // open
+  rise('o1',t,L('open',0)-.2,1.1,50);rise('o2',t,L('open',1)-.1);rise('o3',t,L('open',2)-.05,.6,20);
+  // routes + keep (one stage)
+  rise('g1',t,L('routes',0)-.4,1,20);
+  const inKeep=t>=L('keep',0)-.3;
+  $('g1h').innerHTML=inKeep?'And some access has to stay.':t>=L('routes',4)-.1?'Five routes. One person.':'Who can still reach Payroll?';
+  rise('g1h',t,inKeep?L('keep',0)-.3:t>=L('routes',4)-.1?L('routes',4)-.1:L('routes',0)-.4,.7,16);
+  {const st={},nodes={'j.ortiz':'blue','payroll':'blue'};const lit=ROUTE_STEPS.filter(r=>t>=L('routes',r.k)-.1);
+   for(const r of lit)for(const p of r.routes)for(const id of p)st[id]='route';
+   const nLit=lit.reduce((a,r)=>a+r.routes.length,0);
+   let cap=lit.length?`${nLit} of ${ROUTES.length} · through ${lit[lit.length-1].label}`:'';
+   if(inKeep){for(const id of Object.keys(st))st[id]='dim';
+     if(t>=L('keep',1)-.1)for(const [u,r] of PRESERVE.filter(([u])=>u==='j.ortiz'))nodes[r]='green';
+     if(t>=L('keep',2)-.1)for(const [u] of PRESERVE.filter(([u])=>u!=='j.ortiz'))nodes[u]='green';
+     cap=t>=L('keep',2)-.1?'Others depend on the same groups: r.patel needs payroll, m.chen needs the warehouse.':t>=L('keep',1)-.1?"j.ortiz keeps training, the data warehouse and the pager.":'';}
+   paint('g1',st,nodes);$('g1c').innerHTML=cap;$('g1c').style.opacity=cap?1:0;}
+  // meet
+  rise('m1',t,L('meet',0)-.2,1.1,50);rise('m2',t,L('meet',1)-.1);rise('m3',t,L('meet',1)+1.6,1,30);
+  // run
+  rise('rh',t,L('run',0)-.6,.8,16);rise('rdots',t,L('run',0)-.4,.6,0);rise('rcap',t,L('run',0),.8,0);
+  {const {st,nodes,cur,verdict}=runState(t);paint('g2',st,nodes);
+   STEPS.forEach((_,i)=>$('dot'+i).classList.toggle('on',i<=cur));
+   const done=t>=L('run',11)-.1;
+   const key=done?'done':cur+':'+verdict;
+   if(cur<0){$('rcard').style.opacity=0;}
+   else{
+     if(key!==shownKey){shownKey=key;
+       if(done){$('rt').innerHTML=`<span class="badge">REVOKED · read from the graph</span>`;$('rd').innerHTML='The model reports. The graph decides.';}
+       else{const v=stepView(cur,verdict);$('rt').innerHTML=v.t;$('rd').innerHTML=v.d;
+         $('rt').style.color=v.t==='Rejected'||v.t.startsWith('Applying')?'var(--red)':v.t==='Accepted'?'var(--green)':v.t.startsWith('Someone')?'var(--orange)':'var(--ink)';}}
+     const since=done?L('run',11)-.1:verdict&&MAP[cur][1]!==MAP[cur][0]?L('run',MAP[cur][1]):L('run',MAP[cur][0]);
+     rise('rcard',t,since-.1,.45,14);$('rcard').style.transform+=' translateX(-50%)';}}
+  // live
+  rise('l1',t,L('live',0)-.6,.7,10);rise('l2',t,L('live',0)-.5,.9,30);
+  const vt=clamp((t-(L('live',0)+.3))/11.5)*11.5;
+  // refuse
+  rise('x1',t,L('refuse',0)-.4);rise('g3',t,L('refuse',0)-.2,1,20);rise('x2',t,L('refuse',1)-.1);
+  {const st={},nodes={};const path=RI.paths[0];
+   if(t>=L('refuse',0)+.6){for(const id of path)st[id]='route';nodes['j.ortiz']='blue';nodes['wiki']='blue';}
+   paint('g3',st,nodes,true);}
+  // query
+  rise('q1',t,L('query',0)-.4);rise('q2',t,L('query',0)+.4,1,40);rise('q3',t,L('query',1)-.1);
+  // proof
+  rise('p1',t,L('proof',0)-.4);rise('p2',t,L('proof',0)+.2,.8,20);
+  [11,20,23,24].forEach((v,i)=>{const g=ease((t-(L('proof',0)+.6+i*.35))/1);$('pf'+i).style.height=(v/24*330*g)+'px';$('pn'+i).style.opacity=g;});
+  rise('p3',t,L('proof',1)+1.4,.8,20);rise('p4',t,L('proof',1)+.4,.8,0);
+  // end
+  rise('e1',t,L('end',0)-.2,1.1,50);rise('e2',t,L('end',1)-.1);rise('e3',t,L('end',1)+1.6);rise('e4',t,L('end',1)+2.2,.8,0);
+  return seekTo(vt);
+}
+window.DURATION=TM.total;window.render=render;
+if(!new URLSearchParams(location.search).has('record')){
+  const t0=performance.now();vid.pause();
+  (function loop(n){const t=((n-t0)/1000)%TM.total;render(t);requestAnimationFrame(loop);})(t0);
+} else render(0);
+</script>
+</body>
+</html>

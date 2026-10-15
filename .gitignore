@@ -4,3 +4,10 @@ __pycache__/
 node_modules/
 video/*.mp4
 video/package*.json
+video/*.mp3
+video/*.png
+video/voice/
+video/voice_*/
+video/samples/
+video/review*/
+video/live.webm

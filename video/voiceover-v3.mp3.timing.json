@@ -1,0 +1,327 @@
+{
+ "total": 355.873,
+ "lines": [
+  {
+   "i": 0,
+   "scene": "open",
+   "start": 1.0,
+   "dur": 3.762,
+   "text": "When a contractor leaves a company, their access has to be removed."
+  },
+  {
+   "i": 1,
+   "scene": "open",
+   "start": 5.762,
+   "dur": 5.666,
+   "text": "Say Raj is leaving today, and must lose access to Payroll."
+  },
+  {
+   "i": 2,
+   "scene": "open",
+   "start": 12.927,
+   "dur": 5.991,
+   "text": "The obvious fix is to delete the permission that gives them Payroll."
+  },
+  {
+   "i": 3,
+   "scene": "open",
+   "start": 20.418,
+   "dur": 4.644,
+   "text": "But after you delete it, Raj can still open Payroll."
+  },
+  {
+   "i": 4,
+   "scene": "routes",
+   "start": 26.562,
+   "dur": 6.455,
+   "text": "That is because, in a real company, access is not a single switch. It is a network."
+  },
+  {
+   "i": 5,
+   "scene": "routes",
+   "start": 34.017,
+   "dur": 8.313,
+   "text": "People belong to groups. Groups belong to other groups. Some people can sign in as a service account."
+  },
+  {
+   "i": 6,
+   "scene": "routes",
+   "start": 43.33,
+   "dur": 3.762,
+   "text": "Every one of those links can lead to Payroll."
+  },
+  {
+   "i": 7,
+   "scene": "routes",
+   "start": 48.592,
+   "dur": 4.923,
+   "text": "Here, Raj reaches Payroll in five different ways."
+  },
+  {
+   "i": 8,
+   "scene": "routes",
+   "start": 54.514,
+   "dur": 1.533,
+   "text": "A direct permission."
+  },
+  {
+   "i": 9,
+   "scene": "routes",
+   "start": 57.247,
+   "dur": 1.393,
+   "text": "A chain of nested groups."
+  },
+  {
+   "i": 10,
+   "scene": "routes",
+   "start": 60.14,
+   "dur": 3.669,
+   "text": "An on-call team, and a service account."
+  },
+  {
+   "i": 11,
+   "scene": "routes",
+   "start": 65.309,
+   "dur": 2.926,
+   "text": "And an emergency \"break-glass\" account."
+  },
+  {
+   "i": 12,
+   "scene": "routes",
+   "start": 69.734,
+   "dur": 4.18,
+   "text": "To really remove access, all five paths have to be cut."
+  },
+  {
+   "i": 13,
+   "scene": "keep",
+   "start": 75.914,
+   "dur": 1.672,
+   "text": "But you cannot just cut everything."
+  },
+  {
+   "i": 14,
+   "scene": "keep",
+   "start": 78.586,
+   "dur": 5.991,
+   "text": "Raj still needs his training, the data warehouse, and the pager, for the rest of the day."
+  },
+  {
+   "i": 15,
+   "scene": "keep",
+   "start": 86.077,
+   "dur": 8.963,
+   "text": "And other people share the same groups. Priya still needs Payroll. Ayesha still needs the warehouse."
+  },
+  {
+   "i": 16,
+   "scene": "keep",
+   "start": 96.539,
+   "dur": 8.313,
+   "text": "So the real question is: which links can we cut, so that Payroll is closed, and nothing else breaks?"
+  },
+  {
+   "i": 17,
+   "scene": "meet",
+   "start": 106.852,
+   "dur": 7.755,
+   "text": "AccessCut answers that question with an AI agent and a graph database, FalkorDB."
+  },
+  {
+   "i": 18,
+   "scene": "meet",
+   "start": 115.608,
+   "dur": 11.517,
+   "text": "The company's access is stored in FalkorDB as a graph. People, groups and resources are the points. Every permission is a line between them."
+  },
+  {
+   "i": 19,
+   "scene": "meet",
+   "start": 128.625,
+   "dur": 12.678,
+   "text": "The agent can only do four things. Look at the paths. Propose links to cut. Ask FalkorDB to check the proposal. And apply it."
+  },
+  {
+   "i": 20,
+   "scene": "meet",
+   "start": 142.803,
+   "dur": 5.944,
+   "text": "The agent decides what to try. FalkorDB decides whether it is safe."
+  },
+  {
+   "i": 21,
+   "scene": "run",
+   "start": 150.747,
+   "dur": 2.043,
+   "text": "Here is a real run."
+  },
+  {
+   "i": 22,
+   "scene": "run",
+   "start": 153.791,
+   "dur": 4.412,
+   "text": "First, FalkorDB finds all five paths from Raj to Payroll."
+  },
+  {
+   "i": 23,
+   "scene": "run",
+   "start": 160.202,
+   "dur": 2.461,
+   "text": "The agent proposes cutting four links."
+  },
+  {
+   "i": 24,
+   "scene": "run",
+   "start": 164.164,
+   "dur": 6.827,
+   "text": "FalkorDB rejects it. One of those cuts would also take away Raj's warehouse access."
+  },
+  {
+   "i": 25,
+   "scene": "run",
+   "start": 171.99,
+   "dur": 4.737,
+   "text": "And it tells the agent exactly which two cuts caused that."
+  },
+  {
+   "i": 26,
+   "scene": "run",
+   "start": 178.727,
+   "dur": 3.855,
+   "text": "So the agent swaps one cut for a different one."
+  },
+  {
+   "i": 27,
+   "scene": "run",
+   "start": 184.082,
+   "dur": 4.783,
+   "text": "Now one path to Payroll is still open. So it adds one more cut."
+  },
+  {
+   "i": 28,
+   "scene": "run",
+   "start": 190.365,
+   "dur": 5.341,
+   "text": "FalkorDB checks again. This time, the plan is accepted."
+  },
+  {
+   "i": 29,
+   "scene": "run",
+   "start": 197.706,
+   "dur": 6.641,
+   "text": "But before the agent applies it, someone else in the company adds a new permission."
+  },
+  {
+   "i": 30,
+   "scene": "run",
+   "start": 205.846,
+   "dur": 5.805,
+   "text": "That opens a sixth path to Payroll. The plan is now out of date."
+  },
+  {
+   "i": 31,
+   "scene": "run",
+   "start": 212.651,
+   "dur": 6.223,
+   "text": "FalkorDB notices that the graph has changed, and refuses to apply the old plan."
+  },
+  {
+   "i": 32,
+   "scene": "run",
+   "start": 220.874,
+   "dur": 6.734,
+   "text": "The agent looks at the graph again, finds the new path, and adds it to the plan."
+  },
+  {
+   "i": 33,
+   "scene": "run",
+   "start": 229.108,
+   "dur": 5.619,
+   "text": "Now the plan is applied. Six links disabled, all at once."
+  },
+  {
+   "i": 34,
+   "scene": "run",
+   "start": 236.727,
+   "dur": 11.471,
+   "text": "Finally, FalkorDB checks the result. Raj can no longer reach Payroll. And everything that had to stay is still there."
+  },
+  {
+   "i": 35,
+   "scene": "run",
+   "start": 250.198,
+   "dur": 6.409,
+   "text": "Notice that the final answer comes from the graph, not from the AI's own words."
+  },
+  {
+   "i": 36,
+   "scene": "live",
+   "start": 258.607,
+   "dur": 7.384,
+   "text": "This is the same thing running live, in the demo app, on a real FalkorDB database."
+  },
+  {
+   "i": 37,
+   "scene": "refuse",
+   "start": 277.991,
+   "dur": 4.412,
+   "text": "Sometimes, removing access safely is impossible."
+  },
+  {
+   "i": 38,
+   "scene": "refuse",
+   "start": 283.903,
+   "dur": 7.709,
+   "text": "Here, the only path to the wiki goes through protected links, that nobody is allowed to cut."
+  },
+  {
+   "i": 39,
+   "scene": "refuse",
+   "start": 293.112,
+   "dur": 6.966,
+   "text": "So the agent says it cannot be done, shows why, and changes nothing."
+  },
+  {
+   "i": 40,
+   "scene": "query",
+   "start": 302.078,
+   "dur": 2.601,
+   "text": "All of this rests on one graph query."
+  },
+  {
+   "i": 41,
+   "scene": "query",
+   "start": 306.178,
+   "dur": 10.82,
+   "text": "It finds every path from a person to a resource. Give it a proposed cut, and it shows what would happen, without changing anything."
+  },
+  {
+   "i": 42,
+   "scene": "proof",
+   "start": 318.999,
+   "dur": 6.223,
+   "text": "We tested the agent against an independent checker that already knows the right answer."
+  },
+  {
+   "i": 43,
+   "scene": "proof",
+   "start": 326.722,
+   "dur": 10.728,
+   "text": "Each time FalkorDB gave the agent better feedback, it did better. From 11 out of 24 test cases, up to 24 out of 24."
+  },
+  {
+   "i": 44,
+   "scene": "proof",
+   "start": 339.449,
+   "dur": 6.037,
+   "text": "And on new cases it had never seen before, it passed 15 out of 15."
+  },
+  {
+   "i": 45,
+   "scene": "end",
+   "start": 347.486,
+   "dur": 5.387,
+   "text": "AccessCut. Remove someone's access. Every path, and nothing else."
+  }
+ ]
+}
