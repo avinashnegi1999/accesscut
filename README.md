@@ -1,9 +1,9 @@
 <h1 align="center">AccessCut</h1>
 <p align="center">Remove someone's access. Every route. Nothing else.</p>
 
-[![Watch the demo film: an agent run, routes to Payroll in blue, cuts in red, verified on the graph](docs/hero.png)](https://www.youtube.com/watch?v=IWMEj8DXS5s)
+[![Watch the demo film: an agent run, routes to Payroll in blue, cuts in red, verified on the graph](docs/hero.png)](https://youtu.be/pAnXCK4__AM)
 
-<p align="center"><b><a href="https://www.youtube.com/watch?v=IWMEj8DXS5s">▶ Watch the demo film (6 min)</a></b></p>
+<p align="center"><b><a href="https://youtu.be/pAnXCK4__AM">▶ Watch the demo film (5 min)</a></b></p>
 
 <p align="center"><sub>Graph Hacks · Agents That Act on Connected Data · Built on FalkorDB</sub></p>
 
