@@ -121,5 +121,5 @@ reported here came from running the code in this repository.
 
 `accesscut.py` graph model and tools · `agent.py` tool-calling loop · `oracle.py` independent route
 search · `check.py` deterministic checks · `eval.py` scored runs · `server.py`, `static/` demo UI ·
-`video/` the demo film, replayed from real recorded runs · `results/` raw eval records ·
+`results/` raw eval records ·
 `docs/EVALUATION.md` full eval history
