@@ -30,7 +30,16 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _local_only(self):
+        """Block other websites from driving this server (each run spends API credit and mutates graphs):
+        Host must be localhost (stops DNS rebinding) and the browser must not mark the request cross-site."""
+        host = (self.headers.get("Host") or "").rsplit(":", 1)[0]
+        site = self.headers.get("Sec-Fetch-Site", "same-origin")
+        return host in ("localhost", "127.0.0.1") and site in ("same-origin", "none")
+
     def do_GET(self):
+        if not self._local_only():
+            return self._json({"error": "forbidden"}, 403)
         url = urlparse(self.path)
         q = {k: v[0] for k, v in parse_qs(url.query).items()}
         if url.path == "/api/scenarios":
