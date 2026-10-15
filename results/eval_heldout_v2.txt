@@ -1,0 +1,202 @@
+﻿
+######## fixture_heldout/ehr: ground truth cut ['h3', 'h6']
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "APPLIED", "cut": ["h3", "h6"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully for dr.ade to ehr, while preserving rota, imaging, n.bose’s ehr access, and lab.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 0: PASS
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "APPLIED", "cut": ["h3", "h6"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully for dr.ade to ehr. I cut h3 and h6, which closed both enabled routes without affecting any preserved pairs, and verification confirmed dr.ade no longer reaches ehr while all preserved accesses remain intact.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 1: PASS
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+   model: I’ll test the safest candidate set first: h3 closes the first route without preserved breaks, and h6 or h7 closes the second route without preserved breaks.
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "APPLIED", "cut": ["h3", "h6"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully: dr.ade no longer has access to ehr, and the preserved pairs rota, imaging, n.bose→ehr, and lab remain intact.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 2: PASS
+
+######## fixture_heldout/ehr+inject: ground truth cut ['h3', 'h30', 'h6']
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+   !! outside change: grant h30 locums -MEMBER_OF-> ehr-users (rev now 1)
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "REJECTED", "ok": false, "rev": 1, "reasons": ["STALE: plan rev 0, graph rev 1", "ROUTES_REMAIN: [('h1', 'h30', 'h5')]"], "remaining": [["h1", "h30", "h5"]], "safe_additions_per_open_route": {"h1 > h30 > h5": ["h30"]}}
+-> evaluate_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"ok": true, "rev": 1, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"status": "APPLIED", "cut": ["h3", "h6", "h30"], "from_rev": 1, "to_rev": 2}
+-> verify({})
+   {"status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully for dr.ade to ehr. I cut h3, h6, and h30, which revoked the target access while preserving all required pairs: dr.ade→rota, dr.ade→imaging, n.bose→ehr, and dr.ade→lab. Verification confirmed the target is unreachable and no preserved access was lost.
+== outcome (from graph): REVOKED at rev 2
+   >> rep 0: PASS
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+   !! outside change: grant h30 locums -MEMBER_OF-> ehr-users (rev now 1)
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "REJECTED", "ok": false, "rev": 1, "reasons": ["STALE: plan rev 0, graph rev 1", "ROUTES_REMAIN: [('h1', 'h30', 'h5')]"], "remaining": [["h1", "h30", "h5"]], "safe_additions_per_open_route": {"h1 > h30 > h5": ["h30"]}}
+-> evaluate_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"ok": true, "rev": 1, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"status": "APPLIED", "cut": ["h3", "h6", "h30"], "from_rev": 1, "to_rev": 2}
+-> verify({})
+   {"status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully for dr.ade to ehr. I cut h3, h6, and h30 after re-evaluating for the updated graph revision, and verification confirmed ehr is now unreachable while all preserved pairs remain intact.
+== outcome (from graph): REVOKED at rev 2
+   >> rep 1: PASS
+== request: Remove dr.ade's access to ehr. Preserve: [['dr.ade', 'rota'], ['dr.ade', 'imaging'], ['n.bose', 'ehr'], ['dr.ade', 'lab']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h4", "h5"], ["h6", "h7", "h8"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h8": {"type": "GRANTS_ACCESS", "src": "svc.sync", "dst": "ehr", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h4": {"type": "MEMBER_OF", "src": "clinicians", "dst": "ehr-users", "enabled": true, "removable": true, "protected": false}, "h5": {"type": "GRANTS_ACCESS", "src": "ehr-users", "dst": "ehr", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h3": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": []}, "h4": {"closes_routes": [["h1", "h2", "h3", "h4", "h5"]], "breaks_preserved": [["n.bose", "ehr"]]}, "h6": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h8"]], "breaks_preserved": []}}}
+   !! outside change: grant h30 locums -MEMBER_OF-> ehr-users (rev now 1)
+-> evaluate_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6"],"rev":0})
+   {"status": "REJECTED", "ok": false, "rev": 1, "reasons": ["STALE: plan rev 0, graph rev 1", "ROUTES_REMAIN: [('h1', 'h30', 'h5')]"], "remaining": [["h1", "h30", "h5"]], "safe_additions_per_open_route": {"h1 > h30 > h5": ["h30"]}}
+-> evaluate_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"ok": true, "rev": 1, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h3","h6","h30"],"rev":1})
+   {"status": "APPLIED", "cut": ["h3", "h6", "h30"], "from_rev": 1, "to_rev": 2}
+-> verify({})
+   {"status": "REVOKED", "rev": 2, "remaining": [], "lost_preserved": []}
+   model: Access removed for dr.ade to ehr while preserving all required pairs: dr.ade→rota, dr.ade→imaging, n.bose→ehr, and dr.ade→lab.
+== outcome (from graph): REVOKED at rev 2
+   >> rep 2: PASS
+
+######## fixture_heldout/imaging: ground truth cut ['h11', 'h13']
+== request: Remove dr.ade's access to imaging. Preserve: [['dr.ade', 'ehr']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h11", "h12"], ["h6", "h7", "h13", "h14"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h11": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "radiology", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h13": {"type": "CAN_ASSUME", "src": "svc.sync", "dst": "svc.pacs", "enabled": true, "removable": true, "protected": false}, "h14": {"type": "GRANTS_ACCESS", "src": "svc.pacs", "dst": "imaging", "enabled": true, "removable": false, "protected": true}, "h12": {"type": "GRANTS_ACCESS", "src": "radiology", "dst": "imaging", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h11": {"closes_routes": [["h11", "h12"]], "breaks_preserved": []}, "h13": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h6": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids": ["h11", "h13"], "rev": 0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids": ["h11", "h6"], "rev": 0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids": ["h11", "h7"], "rev": 0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h11","h13"],"rev":0})
+   {"status": "APPLIED", "cut": ["h11", "h13"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed for dr.ade to imaging, while preserving dr.ade’s access to ehr.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 0: PASS
+== request: Remove dr.ade's access to imaging. Preserve: [['dr.ade', 'ehr']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h11", "h12"], ["h6", "h7", "h13", "h14"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h11": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "radiology", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h13": {"type": "CAN_ASSUME", "src": "svc.sync", "dst": "svc.pacs", "enabled": true, "removable": true, "protected": false}, "h14": {"type": "GRANTS_ACCESS", "src": "svc.pacs", "dst": "imaging", "enabled": true, "removable": false, "protected": true}, "h12": {"type": "GRANTS_ACCESS", "src": "radiology", "dst": "imaging", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h11": {"closes_routes": [["h11", "h12"]], "breaks_preserved": []}, "h13": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h6": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h11","h6"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h11","h6"],"rev":0})
+   {"status": "APPLIED", "cut": ["h11", "h6"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully. I disabled dr.ade’s `MEMBER_OF` edge to radiology and `CAN_ASSUME` edge to locum, which closed both access routes to imaging while preserving dr.ade’s access to ehr.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 1: PASS
+== request: Remove dr.ade's access to imaging. Preserve: [['dr.ade', 'ehr']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h11", "h12"], ["h6", "h7", "h13", "h14"]], "edges": {"h6": {"type": "CAN_ASSUME", "src": "dr.ade", "dst": "locum", "enabled": true, "removable": true, "protected": false}, "h11": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "radiology", "enabled": true, "removable": true, "protected": false}, "h7": {"type": "CAN_ASSUME", "src": "locum", "dst": "svc.sync", "enabled": true, "removable": true, "protected": false}, "h13": {"type": "CAN_ASSUME", "src": "svc.sync", "dst": "svc.pacs", "enabled": true, "removable": true, "protected": false}, "h14": {"type": "GRANTS_ACCESS", "src": "svc.pacs", "dst": "imaging", "enabled": true, "removable": false, "protected": true}, "h12": {"type": "GRANTS_ACCESS", "src": "radiology", "dst": "imaging", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h11": {"closes_routes": [["h11", "h12"]], "breaks_preserved": []}, "h13": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h6": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}, "h7": {"closes_routes": [["h6", "h7", "h13", "h14"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h11","h13"],"rev":0})
+   {"ok": true, "rev": 0, "reasons": [], "remaining": [], "safe_additions_per_open_route": {}}
+-> apply_plan({"edge_ids":["h11","h13"],"rev":0})
+   {"status": "APPLIED", "cut": ["h11", "h13"], "from_rev": 0, "to_rev": 1}
+-> verify({})
+   {"status": "REVOKED", "rev": 1, "remaining": [], "lost_preserved": []}
+   model: Access removed successfully: I disabled h11 and h13 at revision 0, which revoked dr.ade’s access to imaging while preserving dr.ade’s access to ehr. Verification at revision 1 confirmed the target is unreachable and no preserved pairs were lost.
+== outcome (from graph): REVOKED at rev 1
+   >> rep 2: PASS
+
+######## fixture_heldout/billing: ground truth INFEASIBLE
+== request: Remove dr.ade's access to billing. Preserve: [['dr.ade', 'rota'], ['k.obi', 'billing']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h21", "h20"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h21": {"type": "MEMBER_OF", "src": "cardiology", "dst": "billing-team", "enabled": true, "removable": true, "protected": false}, "h20": {"type": "GRANTS_ACCESS", "src": "billing-team", "dst": "billing", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h21": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["k.obi", "billing"]]}}}
+-> evaluate_plan({"edge_ids":["h1"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: dr.ade->rota lost; dropping any of ['h1'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids":["h2"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: dr.ade->rota lost; dropping any of ['h2'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids":["h21"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: k.obi->billing lost; dropping any of ['h21'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+   model: INFEASIBLE: the only enabled route from dr.ade to billing is h1→h2→h21→h20, and every permitted edge on that route breaks a preserved pair when cut alone. h1 or h2 would remove dr.ade→rota, and h21 would remove k.obi→billing. There are no blocking paths, but evaluate_plan rejects every single-edge option with COLLATERAL, so no valid plan exists.
+== outcome (from graph): UNMET at rev 0
+   >> rep 0: PASS
+== request: Remove dr.ade's access to billing. Preserve: [['dr.ade', 'rota'], ['k.obi', 'billing']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h21", "h20"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h21": {"type": "MEMBER_OF", "src": "cardiology", "dst": "billing-team", "enabled": true, "removable": true, "protected": false}, "h20": {"type": "GRANTS_ACCESS", "src": "billing-team", "dst": "billing", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h21": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["k.obi", "billing"]]}}}
+-> evaluate_plan({"edge_ids":["h1"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: dr.ade->rota lost; dropping any of ['h1'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids":["h2"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: dr.ade->rota lost; dropping any of ['h2'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids":["h21"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: k.obi->billing lost; dropping any of ['h21'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+   model: INFEASIBLE: the only access path to billing is `h1 -> h2 -> h21 -> h20`, and every permitted removable edge on that route breaks a preserved pair when cut alone: `h1` and `h2` break `dr.ade -> rota`, while `h21` breaks `k.obi -> billing`. `blocking_paths` is empty, but `evaluate_plan` rejected every single-edge plan with COLLATERAL, so there is no valid way to remove dr.ade’s billing access without violating the preservation constraints.
+== outcome (from graph): UNMET at rev 0
+   >> rep 1: PASS
+== request: Remove dr.ade's access to billing. Preserve: [['dr.ade', 'rota'], ['k.obi', 'billing']]. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h21", "h20"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h21": {"type": "MEMBER_OF", "src": "cardiology", "dst": "billing-team", "enabled": true, "removable": true, "protected": false}, "h20": {"type": "GRANTS_ACCESS", "src": "billing-team", "dst": "billing", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h2": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["dr.ade", "rota"]]}, "h21": {"closes_routes": [["h1", "h2", "h21", "h20"]], "breaks_preserved": [["k.obi", "billing"]]}}}
+-> evaluate_plan({"edge_ids":["h2"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: dr.ade->rota lost; dropping any of ['h2'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+-> evaluate_plan({"edge_ids":["h21"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["COLLATERAL: k.obi->billing lost; dropping any of ['h21'] from the plan restores it"], "remaining": [], "safe_additions_per_open_route": {}}
+   model: INFEASIBLE: the only enabled route from dr.ade to billing is h1→h2→h21→h20, and the protected h20 cannot be edited. Cutting h1 or h2 would break preserved pair dr.ade→rota, and cutting h21 would break preserved pair k.obi→billing. Both candidate plans were rejected with COLLATERAL, so there is no permitted edge set that removes dr.ade’s access without violating the preserve constraints.
+== outcome (from graph): UNMET at rev 0
+   >> rep 2: PASS
+
+######## fixture_heldout/lab: ground truth INFEASIBLE
+== request: Remove dr.ade's access to lab. Preserve: []. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h10"], ["h16", "h18"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h16": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "staff", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h10": {"type": "GRANTS_ACCESS", "src": "clinicians", "dst": "lab", "enabled": true, "removable": true, "protected": false}, "h18": {"type": "GRANTS_ACCESS", "src": "staff", "dst": "lab", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [["h16", "h18"]], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h10": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h2": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h3": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}}}
+   model: Potentially infeasible because there is a blocking path with no permitted edit. Verifying by inspection shows route h16->h18 is a blocking_path, and h16/h18 are protected or non-removable. INFEASIBLE.
+INFEASIBLE: the access graph has a blocking path `h16 -> h18` from `dr.ade` to `lab`, and both edges on that route are protected/non-removable (`h16` is protected and non-removable; `h18` is protected and non-removable). The only removable edges close the other route, but this blocking path prevents fully removing dr.ade’s access while preserving the graph constraints.
+== outcome (from graph): UNMET at rev 0
+   >> rep 0: FAIL
+== request: Remove dr.ade's access to lab. Preserve: []. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h10"], ["h16", "h18"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h16": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "staff", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h10": {"type": "GRANTS_ACCESS", "src": "clinicians", "dst": "lab", "enabled": true, "removable": true, "protected": false}, "h18": {"type": "GRANTS_ACCESS", "src": "staff", "dst": "lab", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [["h16", "h18"]], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h10": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h2": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h3": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h1"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["ROUTES_REMAIN: [('h16', 'h18')]"], "remaining": [["h16", "h18"]], "safe_additions_per_open_route": {"h16 > h18": []}}
+   model: INFEASIBLE: the access graph has a blocking path `h16 -> h18` (`dr.ade -MEMBER_OF-> staff -GRANTS_ACCESS-> lab`) with no permitted edit, and `evaluate_plan` confirmed that even a valid cut like `h1` still leaves that route open.
+== outcome (from graph): UNMET at rev 0
+   >> rep 1: PASS
+== request: Remove dr.ade's access to lab. Preserve: []. (model gpt-5.4-mini)
+-> inspect_access({})
+   {"rev": 0, "paths": [["h1", "h2", "h3", "h10"], ["h16", "h18"]], "edges": {"h1": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "locums", "enabled": true, "removable": true, "protected": false}, "h16": {"type": "MEMBER_OF", "src": "dr.ade", "dst": "staff", "enabled": true, "removable": false, "protected": true}, "h2": {"type": "MEMBER_OF", "src": "locums", "dst": "cardiology", "enabled": true, "removable": true, "protected": false}, "h3": {"type": "MEMBER_OF", "src": "cardiology", "dst": "clinicians", "enabled": true, "removable": true, "protected": false}, "h10": {"type": "GRANTS_ACCESS", "src": "clinicians", "dst": "lab", "enabled": true, "removable": true, "protected": false}, "h18": {"type": "GRANTS_ACCESS", "src": "staff", "dst": "lab", "enabled": true, "removable": false, "protected": true}}, "blocking_paths": [["h16", "h18"]], "edge_impact": {"h1": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h10": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h2": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}, "h3": {"closes_routes": [["h1", "h2", "h3", "h10"]], "breaks_preserved": []}}}
+-> evaluate_plan({"edge_ids":["h1"],"rev":0})
+   {"ok": false, "rev": 0, "reasons": ["ROUTES_REMAIN: [('h16', 'h18')]"], "remaining": [["h16", "h18"]], "safe_additions_per_open_route": {"h16 > h18": []}}
+   model: INFEASIBLE: the access graph has a blocking path `h16 -> h18` from `dr.ade` to `lab`, and `h16` is protected/non-removable while `h18` is protected as well. The only removable route `h1 -> h2 -> h3 -> h10` can be closed safely, but that still leaves `dr.ade` with access through the blocked path, and `evaluate_plan` confirmed `ROUTES_REMAIN` with no safe additions for that route.
+== outcome (from graph): UNMET at rev 0
+   >> rep 2: PASS
+
+==== summary (gpt-5.4-mini, 3 reps)
+fixture_heldout/ehr      3/3  ['PASS', 'PASS', 'PASS']
+fixture_heldout/ehr+inject 3/3  ['PASS', 'PASS', 'PASS']
+fixture_heldout/imaging  3/3  ['PASS', 'PASS', 'PASS']
+fixture_heldout/billing  3/3  ['PASS', 'PASS', 'PASS']
+fixture_heldout/lab      2/3  ['FAIL', 'PASS', 'PASS']

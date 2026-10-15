@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AccessCut</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a65; --line: #d9d7cf;
+    --edge: #a9a79f; --route: #2f5bd3; --cut: #c8372d; --protected: #1d1d1b; --inject: #d98a00;
+    --ok: #1f7a4d; --warn: #b35c00; --chip: #efede6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151514; --panel: #1f1f1d; --ink: #ecebe6; --muted: #9a998f; --line: #34332f;
+      --edge: #5d5c56; --route: #7d9cff; --cut: #ff6b5e; --protected: #ecebe6; --inject: #ffb02e;
+      --ok: #4cc38a; --warn: #ffa24c; --chip: #2a2a27;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 18px 20px 6px; }
+  h1 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+  header p { margin: 4px 0 0; color: var(--muted); max-width: 70ch; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 12px 20px; }
+  select, button, label.toggle { font: inherit; color: var(--ink); background: var(--panel);
+         border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; }
+  button { cursor: pointer; font-weight: 600; }
+  button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  button:disabled { opacity: .5; cursor: default; }
+  label.toggle { display: inline-flex; gap: 6px; align-items: center; }
+  main { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 14px; padding: 0 20px 20px; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; min-width: 0; }
+  .card h2 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .legend span::before { content: ""; display: inline-block; width: 18px; height: 0; margin-right: 6px;
+         vertical-align: middle; border-top: 3px solid var(--c); }
+  .legend .dash::before { border-top-style: dashed; }
+  #outcome { font-weight: 700; padding: 10px 12px; border-radius: 8px; background: var(--chip); margin-bottom: 10px; }
+  #outcome.ok { color: var(--ok); } #outcome.bad { color: var(--warn); }
+  ol { list-style: none; margin: 0; padding: 0; max-height: 70vh; overflow-y: auto; }
+  li { border-left: 3px solid var(--line); padding: 6px 10px; margin: 0 0 8px; overflow-wrap: anywhere; }
+  li .k { font-weight: 700; } li .s { color: var(--muted); font-size: 12px; }
+  li.reject { border-color: var(--warn); } li.good { border-color: var(--ok); }
+  li.inject { border-color: var(--inject); } li.model { border-color: var(--route); }
+  .chip { display: inline-block; background: var(--chip); border-radius: 6px; padding: 0 6px; margin: 2px 2px 0 0;
+          font: 12px ui-monospace, SFMono-Regular, Consolas, monospace; }
+</style>
+</head>
+<body>
+<header>
+  <h1>AccessCut</h1>
+  <p>Remove one identity's access to one resource across every route in the access graph, without breaking
+     the access that must stay. An LLM proposes edge cuts; FalkorDB traversals judge every plan.</p>
+</header>
+<div class="controls">
+  <select id="scenario" aria-label="Scenario"></select>
+  <label class="toggle"><input type="checkbox" id="inject"> Outside change mid-run</label>
+  <button class="primary" id="run">Run agent</button>
+</div>
+<main>
+  <section class="card">
+    <h2>Access graph</h2>
+    <svg id="graph" role="img" aria-label="Access graph"></svg>
+    <div class="legend">
+      <span style="--c:var(--edge)">edge</span>
+      <span style="--c:var(--route)">route to target</span>
+      <span style="--c:var(--protected)">protected</span>
+      <span class="dash" style="--c:var(--cut)">cut by agent</span>
+      <span style="--c:var(--inject)">added mid-run</span>
+    </div>
+  </section>
+  <section class="card">
+    <h2>Agent trace</h2>
+    <div id="outcome">Pick a scenario and run the agent.</div>
+    <ol id="trace"></ol>
+  </section>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+let scenarios = [], fixture = null, edges = [], routeEdges = new Set(), cut = new Set(), injected = new Set(), current = null, lastSaid = "";
+
+async function init() {
+  scenarios = await (await fetch("/api/scenarios")).json();
+  $("scenario").innerHTML = scenarios.map((s, i) =>
+    `<option value="${i}">${s.fixture.replace("fixture", "org").replace("_", " ")} · remove ${s.identity} → ${s.resource}</option>`).join("");
+  $("scenario").onchange = load;
+  $("run").onclick = run;
+  await load();
+}
+
+async function load() {
+  current = scenarios[+$("scenario").value];
+  $("inject").disabled = !current.inject;
+  if (!current.inject) $("inject").checked = false;
+  fixture = await (await fetch(`/api/fixture?f=${current.fixture}`)).json();
+  edges = fixture.edges.map(e => ({...e}));
+  routeEdges = new Set(); cut = new Set(); injected = new Set(); lastSaid = "";
+  $("trace").innerHTML = ""; setOutcome("Ready.", "");
+  draw();
+}
+
+function layout() {
+  const kind = Object.fromEntries(fixture.nodes.map(n => [n.id, n.label]));
+  const out = {}; edges.forEach(e => (out[e.src] ??= []).push(e.dst));
+  const depth = {};
+  const d = (n, seen = new Set()) => {
+    if (depth[n] !== undefined) return depth[n];
+    if (seen.has(n)) return 0;
+    seen.add(n);
+    let best = 0;
+    for (const [s, ts] of Object.entries(out)) if (ts.includes(n)) best = Math.max(best, d(s, seen) + 1);
+    return (depth[n] = best);
+  };
+  fixture.nodes.forEach(n => d(n.id));
+  const maxD = Math.max(...Object.values(depth));
+  fixture.nodes.forEach(n => { if (kind[n.id] === "Resource") depth[n.id] = maxD; });
+  const cols = {}; fixture.nodes.forEach(n => (cols[depth[n.id]] ??= []).push(n.id));
+  const W = 900, colW = W / (maxD + 1), rowH = 46;
+  const H = Math.max(...Object.values(cols).map(c => c.length)) * rowH + 30;
+  const pos = {};
+  Object.entries(cols).forEach(([c, ids]) => ids.forEach((id, i) => {
+    pos[id] = { x: colW * c + colW / 2, y: (H - ids.length * rowH) / 2 + i * rowH + rowH / 2, kind: kind[id] };
+  }));
+  return { pos, W, H };
+}
+
+function draw() {
+  const { pos, W, H } = layout();
+  const svg = $("graph");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const css = (v) => `var(${v})`;
+  let s = `<defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto">
+           <path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>`;
+  for (const e of edges) {
+    const a = pos[e.src], b = pos[e.dst]; if (!a || !b) continue;
+    let color = css("--edge"), width = 1.5, dash = "";
+    if (e.protected) { color = css("--protected"); width = 2; }
+    if (routeEdges.has(e.id)) { color = css("--route"); width = 3; }
+    if (injected.has(e.id)) { color = css("--inject"); width = 3; }
+    if (cut.has(e.id) || e.enabled === false) { color = css("--cut"); width = 3; dash = "6 5"; }
+    const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    s += `<path d="M${a.x + 50},${a.y} C${mx},${a.y} ${mx},${b.y} ${b.x - 52},${b.y}" fill="none" stroke="${color}"
+           stroke-width="${width}" stroke-dasharray="${dash}" marker-end="url(#arr)"><title>${e.id} ${e.type}${e.protected ? " (protected)" : ""}</title></path>
+          <text x="${mx}" y="${my - 4}" font-size="10" text-anchor="middle" fill="${css("--muted")}">${e.id}${e.protected ? " 🔒" : ""}</text>`;
+  }
+  for (const [id, p] of Object.entries(pos)) {
+    const target = current && (id === current.identity || id === current.resource);
+    const shape = p.kind === "Resource" ? 14 : p.kind === "Group" ? 4 : 999;
+    s += `<g><rect x="${p.x - 50}" y="${p.y - 14}" width="100" height="28" rx="${Math.min(shape, 14)}"
+            fill="${css("--panel")}" stroke="${target ? css("--route") : css("--line")}" stroke-width="${target ? 2.5 : 1}"/>
+          <text x="${p.x}" y="${p.y + 4}" font-size="11" text-anchor="middle" fill="${css("--ink")}">${id}</text></g>`;
+  }
+  svg.innerHTML = s;
+}
+
+function setOutcome(text, cls) { $("outcome").textContent = text; $("outcome").className = cls; }
+const chips = (xs) => (xs || []).map(x => `<span class="chip">${Array.isArray(x) ? x.join(" › ") : x}</span>`).join("");
+
+function addStep(cls, title, body) {
+  const li = document.createElement("li");
+  li.className = cls; li.innerHTML = `<div class="k">${title}</div><div class="s">${body}</div>`;
+  $("trace").appendChild(li); li.scrollIntoView({ block: "nearest" });
+}
+
+function onEvent(ev) {
+  if (ev.kind === "request") addStep("", "Request", ev.ask);
+  else if (ev.kind === "model") { lastSaid = ev.text; addStep("model", "Agent says", ev.text.replace(/</g, "&lt;")); }
+  else if (ev.kind === "inject") {
+    edges.push({ id: ev.edge, type: ev.type, src: ev.src, dst: ev.dst, enabled: true, protected: false });
+    injected.add(ev.edge);
+    addStep("inject", "Outside change", `New grant <span class="chip">${ev.edge}</span> ${ev.src} → ${ev.dst}. Graph revision is now ${ev.rev}.`);
+  } else if (ev.kind === "tool") {
+    const o = ev.out, a = (() => { try { return JSON.parse(ev.args); } catch { return {}; } })();
+    if (ev.name === "inspect_access") {
+      routeEdges = new Set((o.paths || []).flat());
+      addStep("", "inspect_access", `${(o.paths || []).length} route(s) at rev ${o.rev}: ${chips(o.paths)}` +
+        (o.blocking_paths?.length ? `<br>No permitted edit on: ${chips(o.blocking_paths)}` : ""));
+    } else if (ev.name === "evaluate_plan") {
+      addStep(o.ok ? "good" : "reject", `evaluate_plan ${chips(a.edge_ids)}`,
+        o.ok ? "Accepted by the validator." : (o.reasons || []).join("<br>"));
+    } else if (ev.name === "apply_plan") {
+      if (o.status === "APPLIED") o.cut.forEach(e => cut.add(e));
+      addStep(o.status === "APPLIED" ? "good" : "reject", `apply_plan → ${o.status}${o.replayed ? " (replay)" : ""}`,
+        o.status === "APPLIED" ? `Disabled ${chips(o.cut)} · rev ${o.from_rev} → ${o.to_rev}` : (o.reasons || []).join("<br>"));
+    } else if (ev.name === "verify") {
+      addStep(o.status === "REVOKED" ? "good" : "reject", `verify → ${o.status}`,
+        o.remaining?.length ? `Still open: ${chips(o.remaining)}` : "No route remains; preserved access intact.");
+    } else addStep("reject", ev.name, JSON.stringify(o));
+    draw();
+  } else if (ev.kind === "limit") addStep("reject", "Turn limit reached", "");
+  else if (ev.kind === "error") { addStep("reject", "Error", ev.message); setOutcome(ev.message, "bad"); }
+  else if (ev.kind === "outcome") {
+    edges = ev.edges; routeEdges = new Set((ev.remaining || []).flat()); draw();
+    const ok = ev.status === "REVOKED";
+    const refused = !ok && /^\s*INFEASIBLE/im.test(lastSaid) && ev.rev === 0;
+    setOutcome(ok ? `REVOKED — verified on the graph at rev ${ev.rev}.`
+             : refused ? `INFEASIBLE — the agent refused with evidence; graph unchanged (rev 0).`
+             : `UNMET at rev ${ev.rev} — access not removed${ev.lost_preserved?.length ? ", preserved access lost" : ""}.`,
+             ok || refused ? "ok" : "bad");
+  }
+}
+
+async function run() {
+  await load();
+  $("run").disabled = true; setOutcome("Running…", "");
+  const src = new EventSource(`/api/run?f=${current.fixture}&r=${current.request}&inject=${$("inject").checked ? 1 : 0}`);
+  src.onmessage = (m) => {
+    const ev = JSON.parse(m.data);
+    if (ev.kind === "done") { src.close(); $("run").disabled = false; } else onEvent(ev);
+  };
+  src.onerror = () => { src.close(); $("run").disabled = false; if ($("outcome").textContent === "Running…") setOutcome("Connection error.", "bad"); };
+}
+init();
+</script>
+</body>
+</html>
