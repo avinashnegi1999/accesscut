@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AccessCut — film</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Same language as the Yojana Sathi film: full-bleed tiles (white / parchment / near-black),
+   one blue for every highlight, 600-weight headlines, one idea per frame. */
+:root{--ink:#1d1d1f;--muted:#6e6e73;--blue:#0066cc;--sky:#2997ff;--white:#fff;--parch:#f5f5f7;--tile:#272729;--mute-dark:#a1a1a6;
+      --edge:#c7c7cc;--red:#d70015;--orange:#e07000;--green:#1a7f37}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fff}
+body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink)}
+.scene{position:absolute;inset:0;opacity:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.white{background:var(--white)}.parch{background:var(--parch)}.dark{background:var(--tile);color:#f5f5f7}
+.h{font-size:136px;font-weight:600;letter-spacing:-.035em;line-height:1.04}
+.h2{font-size:76px;font-weight:600;letter-spacing:-.03em;line-height:1.08}
+.h3{font-size:54px;font-weight:600;letter-spacing:-.025em;line-height:1.1}
+.sub{margin-top:26px;font-size:38px;font-weight:400;letter-spacing:-.01em;color:var(--muted);line-height:1.3}
+.dark .sub{color:var(--mute-dark)}
+.cap{position:absolute;bottom:48px;left:0;right:0;font-size:22px;color:var(--muted)}
+.blue{color:var(--blue)}.sky{color:var(--sky)}.red{color:var(--red)}.orange{color:var(--orange)}.green{color:var(--green)}
+.el{will-change:opacity,transform}
+svg text{font-family:Inter,sans-serif}
+.node rect{fill:#fff;stroke:#d2d2d7;stroke-width:2}
+.node text{font-size:26px;font-weight:600;fill:var(--ink)}
+.node.res rect{fill:var(--parch)}
+.node.target rect{stroke:var(--blue);stroke-width:4}
+.elabel{font-size:20px;fill:var(--muted);font-weight:600}
+/* scene 3 split */
+.split{display:flex;align-items:center;gap:40px;width:1800px}
+.split svg{flex:0 0 1100px}
+.trace{flex:1;text-align:left;display:flex;flex-direction:column;gap:14px}
+.step{border-left:6px solid #d2d2d7;padding:10px 18px;background:#fff;border-radius:0 14px 14px 0}
+.step .k{font:600 26px/1.25 Inter,sans-serif}
+.step .s{font:400 21px/1.35 "JetBrains Mono",ui-monospace,monospace;color:var(--muted);margin-top:4px}
+.step.ok{border-color:var(--green)}.step.no{border-color:var(--red)}.step.inj{border-color:var(--orange)}
+.badge{display:inline-block;margin-top:8px;padding:14px 34px;border-radius:999px;font:600 34px Inter;color:#fff;background:var(--green)}
+.badge.gray{background:#6e6e73}
+.code{width:1560px;border-radius:28px;background:#1d1d1f;text-align:left;overflow:hidden;margin-top:54px}
+.code .bar{background:#2c2c2e;padding:18px 34px;font:500 22px "JetBrains Mono",monospace;color:var(--mute-dark)}
+.code pre{font-variant-ligatures:none;padding:30px 34px;font:400 27px/1.6 "JetBrains Mono",ui-monospace,monospace;color:#f5f5f7;white-space:pre-wrap}
+.code pre b{color:var(--sky);font-weight:400}
+.stats{display:flex;gap:90px;margin-top:56px}
+.stat .n{font-size:110px;font-weight:600;letter-spacing:-.03em}
+.stat .l{font-size:28px;color:var(--muted);margin-top:6px}
+.url{margin-top:56px;font-size:40px;font-weight:600;color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- 1 · title -->
+<section class="scene white" id="s1">
+  <div class="h el" id="s1a">AccessCut</div>
+  <div class="sub el" id="s1b">Remove someone's access. Every route. Nothing else.</div>
+  <div class="cap el" id="s1c">An agent on a FalkorDB access graph</div>
+</section>
+
+<!-- 2 · the problem -->
+<section class="scene parch" id="s2">
+  <div class="h2 el" id="s2a">Deleting the direct grant isn't enough.</div>
+  <svg class="el" id="g2" width="1300" height="600" viewBox="0 0 1240 620" style="margin-top:40px"></svg>
+  <div class="sub el" id="s2b" style="margin-top:10px">c.lee reaches Payroll three ways: <span class="blue" id="s2n">…</span></div>
+</section>
+
+<!-- 3 · the real run -->
+<section class="scene white" id="s3">
+  <div class="h3 el" id="s3a" style="margin-bottom:34px">The agent plans. FalkorDB judges every step.</div>
+  <div class="split">
+    <svg id="g3" viewBox="0 0 1240 620"></svg>
+    <div class="trace" id="trace"></div>
+  </div>
+  <div class="cap el" id="s3c">Real run · gpt-5.4-mini · replayed from video/trace_payroll.json</div>
+</section>
+
+<!-- 4 · refusal -->
+<section class="scene dark" id="s4">
+  <div class="h2 el" id="s4a">When no allowed edit works, it says so.</div>
+  <svg class="el" id="g4" width="1100" height="500" viewBox="0 0 1240 620" style="margin-top:40px"></svg>
+  <div class="sub el" id="s4b"></div>
+</section>
+
+<!-- 5 · the query -->
+<section class="scene parch" id="s5">
+  <div class="h2 el" id="s5a">One traversal does the judging.</div>
+  <div class="code el" id="s5b"><div class="bar">inspect · evaluate · verify</div><pre><b>MATCH</b> p=(u:Identity {id:$u})
+      -[:MEMBER_OF|CAN_ASSUME|GRANTS_ACCESS*1..8]->(r:Resource {id:$r})
+<b>WHERE</b> all(e IN relationships(p) <b>WHERE</b> e.enabled <b>AND NOT</b> e.id IN $cut)
+<b>RETURN</b> [e IN relationships(p) | e.id]</pre></div>
+  <div class="sub el" id="s5c">Plans apply in one atomic, revision-checked query. Stale plans are rejected.</div>
+</section>
+
+<!-- 6 · results + end card -->
+<section class="scene white" id="s6">
+  <div class="h2 el" id="s6a">Scored against an independent oracle.</div>
+  <div class="stats el" id="s6b">
+    <div class="stat"><div class="n blue">24/24</div><div class="l">tuned scenarios</div></div>
+    <div class="stat"><div class="n blue">15/15</div><div class="l">held-out scenarios</div></div>
+  </div>
+  <div class="url el" id="s6c">github.com/avinashnegi1999/accesscut</div>
+  <div class="cap el" id="s6d">Synthetic fixtures. Graph Hacks · Agents That Act on Connected Data</div>
+</section>
+
+<script>
+const PAYROLL={
+ "model": "gpt-5.4-mini",
+ "result": {
+  "status": "REVOKED",
+  "rev": 2,
+  "remaining": [],
+  "lost_preserved": [],
+  "calls": 6,
+  "rejected_applies": 1,
+  "claimed_infeasible": false,
+  "said": "Access to payroll for c.lee has been removed, and the preserved pairs remain intact."
+ },
+ "events": [
+  {
+   "kind": "request",
+   "ask": "Remove c.lee's access to payroll. Preserve: [['c.lee', 'training'], ['a.kim', 'payroll']].",
+   "model": "gpt-5.4-mini",
+   "req": {
+    "identity": "c.lee",
+    "resource": "payroll",
+    "preserve": [
+     [
+      "c.lee",
+      "training"
+     ],
+     [
+      "a.kim",
+      "payroll"
+     ]
+    ],
+    "inject": [
+     "e20",
+     "MEMBER_OF",
+     "c.lee",
+     "finance-readers"
+    ],
+    "not_applicable_preserve": []
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "inspect_access",
+   "args": "{}",
+   "out": {
+    "rev": 0,
+    "paths": [
+     [
+      "e1"
+     ],
+     [
+      "e2",
+      "e3",
+      "e4"
+     ],
+     [
+      "e5",
+      "e6"
+     ]
+    ],
+    "edges": {
+     "e5": {
+      "type": "CAN_ASSUME",
+      "src": "c.lee",
+      "dst": "svc.reporting",
+      "enabled": true,
+      "removable": true,
+      "protected": false
+     },
+     "e2": {
+      "type": "MEMBER_OF",
+      "src": "c.lee",
+      "dst": "contractors",
+      "enabled": true,
+      "removable": true,
+      "protected": false
+     },
+     "e1": {
+      "type": "GRANTS_ACCESS",
+      "src": "c.lee",
+      "dst": "payroll",
+      "enabled": true,
+      "removable": true,
+      "protected": false
+     },
+     "e6": {
+      "type": "GRANTS_ACCESS",
+      "src": "svc.reporting",
+      "dst": "payroll",
+      "enabled": true,
+      "removable": false,
+      "protected": true
+     },
+     "e3": {
+      "type": "MEMBER_OF",
+      "src": "contractors",
+      "dst": "finance-readers",
+      "enabled": true,
+      "removable": true,
+      "protected": false
+     },
+     "e4": {
+      "type": "GRANTS_ACCESS",
+      "src": "finance-readers",
+      "dst": "payroll",
+      "enabled": true,
+      "removable": false,
+      "protected": true
+     }
+    },
+    "blocking_paths": [],
+    "edge_impact": {
+     "e1": {
+      "closes_routes": [
+       [
+        "e1"
+       ]
+      ],
+      "breaks_preserved": []
+     },
+     "e2": {
+      "closes_routes": [
+       [
+        "e2",
+        "e3",
+        "e4"
+       ]
+      ],
+      "breaks_preserved": [
+       [
+        "c.lee",
+        "training"
+       ]
+      ]
+     },
+     "e3": {
+      "closes_routes": [
+       [
+        "e2",
+        "e3",
+        "e4"
+       ]
+      ],
+      "breaks_preserved": []
+     },
+     "e5": {
+      "closes_routes": [
+       [
+        "e5",
+        "e6"
+       ]
+      ],
+      "breaks_preserved": []
+     }
+    }
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "evaluate_plan",
+   "args": "{\"edge_ids\":[\"e3\",\"e5\",\"e1\"],\"rev\":0}",
+   "out": {
+    "ok": true,
+    "rev": 0,
+    "reasons": [],
+    "remaining": [],
+    "safe_additions_per_open_route": {}
+   }
+  },
+  {
+   "kind": "inject",
+   "edge": "e20",
+   "type": "MEMBER_OF",
+   "src": "c.lee",
+   "dst": "finance-readers",
+   "rev": 1
+  },
+  {
+   "kind": "tool",
+   "name": "apply_plan",
+   "args": "{\"edge_ids\":[\"e3\",\"e5\",\"e1\"],\"rev\":0}",
+   "out": {
+    "status": "REJECTED",
+    "ok": false,
+    "rev": 1,
+    "reasons": [
+     "STALE: plan rev 0, graph rev 1",
+     "ROUTES_REMAIN: [('e20', 'e4')]"
+    ],
+    "remaining": [
+     [
+      "e20",
+      "e4"
+     ]
+    ],
+    "safe_additions_per_open_route": {
+     "e20 > e4": [
+      "e20"
+     ]
+    }
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "evaluate_plan",
+   "args": "{\"edge_ids\":[\"e3\",\"e5\",\"e1\",\"e20\"],\"rev\":1}",
+   "out": {
+    "ok": true,
+    "rev": 1,
+    "reasons": [],
+    "remaining": [],
+    "safe_additions_per_open_route": {}
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "apply_plan",
+   "args": "{\"edge_ids\":[\"e3\",\"e5\",\"e1\",\"e20\"],\"rev\":1}",
+   "out": {
+    "status": "APPLIED",
+    "cut": [
+     "e3",
+     "e5",
+     "e1",
+     "e20"
+    ],
+    "from_rev": 1,
+    "to_rev": 2
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "verify",
+   "args": "{}",
+   "out": {
+    "status": "REVOKED",
+    "rev": 2,
+    "remaining": [],
+    "lost_preserved": []
+   }
+  },
+  {
+   "kind": "model",
+   "text": "Access to payroll for c.lee has been removed, and the preserved pairs remain intact."
+  },
+  {
+   "kind": "outcome",
+   "status": "REVOKED",
+   "rev": 2,
+   "remaining": [],
+   "lost_preserved": [],
+   "edges": [
+    {
+     "id": "e5",
+     "type": "CAN_ASSUME",
+     "src": "c.lee",
+     "dst": "svc.reporting",
+     "enabled": false,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e2",
+     "type": "MEMBER_OF",
+     "src": "c.lee",
+     "dst": "contractors",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e20",
+     "type": "MEMBER_OF",
+     "src": "c.lee",
+     "dst": "finance-readers",
+     "enabled": false,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e7",
+     "type": "MEMBER_OF",
+     "src": "c.lee",
+     "dst": "all-staff",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e1",
+     "type": "GRANTS_ACCESS",
+     "src": "c.lee",
+     "dst": "payroll",
+     "enabled": false,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e10",
+     "type": "MEMBER_OF",
+     "src": "a.kim",
+     "dst": "finance-readers",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e6",
+     "type": "GRANTS_ACCESS",
+     "src": "svc.reporting",
+     "dst": "payroll",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e3",
+     "type": "MEMBER_OF",
+     "src": "contractors",
+     "dst": "finance-readers",
+     "enabled": false,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e9",
+     "type": "GRANTS_ACCESS",
+     "src": "contractors",
+     "dst": "training",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e4",
+     "type": "GRANTS_ACCESS",
+     "src": "finance-readers",
+     "dst": "payroll",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e8",
+     "type": "GRANTS_ACCESS",
+     "src": "all-staff",
+     "dst": "wiki",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    }
+   ]
+  }
+ ]
+};
+const WIKI={
+ "model": "gpt-5.4-mini",
+ "result": {
+  "status": "UNMET",
+  "rev": 0,
+  "remaining": [
+   [
+    "e7",
+    "e8"
+   ]
+  ],
+  "lost_preserved": [],
+  "calls": 1,
+  "rejected_applies": 0,
+  "claimed_infeasible": true,
+  "said": "INFEASIBLE: the only access path from c.lee to wiki is `e7 -> e8`, and that route is listed in `blocking_paths`, so there is no permitted edit to close it."
+ },
+ "events": [
+  {
+   "kind": "request",
+   "ask": "Remove c.lee's access to wiki. Preserve: [].",
+   "model": "gpt-5.4-mini",
+   "req": {
+    "identity": "c.lee",
+    "resource": "wiki",
+    "preserve": [],
+    "not_applicable_preserve": []
+   }
+  },
+  {
+   "kind": "tool",
+   "name": "inspect_access",
+   "args": "{}",
+   "out": {
+    "rev": 0,
+    "paths": [
+     [
+      "e7",
+      "e8"
+     ]
+    ],
+    "edges": {
+     "e7": {
+      "type": "MEMBER_OF",
+      "src": "c.lee",
+      "dst": "all-staff",
+      "enabled": true,
+      "removable": false,
+      "protected": true
+     },
+     "e8": {
+      "type": "GRANTS_ACCESS",
+      "src": "all-staff",
+      "dst": "wiki",
+      "enabled": true,
+      "removable": false,
+      "protected": true
+     }
+    },
+    "blocking_paths": [
+     [
+      "e7",
+      "e8"
+     ]
+    ],
+    "edge_impact": {}
+   }
+  },
+  {
+   "kind": "model",
+   "text": "INFEASIBLE: the only access path from c.lee to wiki is `e7 -> e8`, and that route is listed in `blocking_paths`, so there is no permitted edit to close it."
+  },
+  {
+   "kind": "outcome",
+   "status": "UNMET",
+   "rev": 0,
+   "remaining": [
+    [
+     "e7",
+     "e8"
+    ]
+   ],
+   "lost_preserved": [],
+   "edges": [
+    {
+     "id": "e5",
+     "type": "CAN_ASSUME",
+     "src": "c.lee",
+     "dst": "svc.reporting",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e2",
+     "type": "MEMBER_OF",
+     "src": "c.lee",
+     "dst": "contractors",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e7",
+     "type": "MEMBER_OF",
+     "src": "c.lee",
+     "dst": "all-staff",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e1",
+     "type": "GRANTS_ACCESS",
+     "src": "c.lee",
+     "dst": "payroll",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e10",
+     "type": "MEMBER_OF",
+     "src": "a.kim",
+     "dst": "finance-readers",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e6",
+     "type": "GRANTS_ACCESS",
+     "src": "svc.reporting",
+     "dst": "payroll",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e3",
+     "type": "MEMBER_OF",
+     "src": "contractors",
+     "dst": "finance-readers",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e9",
+     "type": "GRANTS_ACCESS",
+     "src": "contractors",
+     "dst": "training",
+     "enabled": true,
+     "removable": true,
+     "protected": false
+    },
+    {
+     "id": "e4",
+     "type": "GRANTS_ACCESS",
+     "src": "finance-readers",
+     "dst": "payroll",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    },
+    {
+     "id": "e8",
+     "type": "GRANTS_ACCESS",
+     "src": "all-staff",
+     "dst": "wiki",
+     "enabled": true,
+     "removable": false,
+     "protected": true
+    }
+   ]
+  }
+ ]
+};
+const $=id=>document.getElementById(id);
+const clamp=x=>x<0?0:x>1?1:x;
+const ease=x=>1-Math.pow(1-clamp(x),3);
+const SCENES=[['s1',0,7],['s2',7,21],['s3',21,55],['s4',55,66],['s5',66,76],['s6',76,86]];
+const DURATION=86;
+function rise(id,t,start,d=0.9,dy=40){const p=ease((t-start)/d);const e=$(id);e.style.opacity=p;e.style.transform=`translateY(${(1-p)*dy}px)`;}
+
+/* ---------- graph (the small fixture, hand-placed) ---------- */
+const NODES={'c.lee':[120,290,'id'],'a.kim':[120,560,'id'],'svc.reporting':[500,170,'id'],'contractors':[500,340,'grp'],
+  'all-staff':[500,500,'grp'],'finance-readers':[840,340,'grp'],'payroll':[1120,190,'res'],'training':[1120,410,'res'],'wiki':[1120,560,'res']};
+const EDGES=[['e1','c.lee','payroll',0],['e2','c.lee','contractors',0],['e3','contractors','finance-readers',0],['e4','finance-readers','payroll',1],
+  ['e5','c.lee','svc.reporting',0],['e6','svc.reporting','payroll',1],['e7','c.lee','all-staff',1],['e8','all-staff','wiki',1],
+  ['e9','contractors','training',0],['e10','a.kim','finance-readers',0],['e20','c.lee','finance-readers',0]];
+const W=220,H=56;
+function curve(a,b,id){const [x1,y1]=NODES[a],[x2,y2]=NODES[b];const sx=x1+W/2,ex=x2-W/2-10;
+  let dy=id==='e1'?-215:id==='e20'?95:0;const mx=(sx+ex)/2;
+  return [`M${sx},${y1} C${mx},${y1+dy} ${mx},${y2+dy} ${ex},${y2}`,mx,(y1+y2)/2+dy*0.75];}
+function build(svgId,target){
+  const s=$(svgId);let h=`<defs><marker id="m${svgId}" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" orient="auto"><path d="M0,0L10,5L0,10z" fill="context-stroke"/></marker></defs>`;
+  for(const [id,a,b,prot] of EDGES){const [d,lx,ly]=curve(a,b,id);
+    h+=`<path id="${svgId}-${id}" d="${d}" fill="none" stroke="var(--edge)" stroke-width="4" marker-end="url(#m${svgId})"/>`+
+       `<text id="${svgId}-${id}l" class="elabel" x="${lx}" y="${ly-10}" text-anchor="middle">${id}${prot?' 🔒':''}</text>`;}
+  for(const [n,[x,y,k]] of Object.entries(NODES)){
+    h+=`<g class="node ${k==='res'?'res':''} ${target.includes(n)?'target':''}"><rect x="${x-W/2}" y="${y-H/2}" width="${W}" height="${H}" rx="${k==='res'?16:k==='grp'?6:28}"/>`+
+       `<text x="${x}" y="${y+9}" text-anchor="middle">${n}</text></g>`;}
+  s.innerHTML=h;}
+const COL={base:'var(--edge)',prot:'#1d1d1f',route:'var(--blue)',cut:'var(--red)',inj:'var(--orange)'};
+function paint(svgId,id,state,show=1){const p=$(`${svgId}-${id}`),l=$(`${svgId}-${id}l`);if(!p)return;
+  p.style.stroke=svgId==='g4'&&state==='prot'?'#8e8e93':COL[state];p.style.strokeWidth=state==='base'?4:state==='prot'?5:7;p.style.strokeDasharray=state==='cut'?'14 10':'';
+  p.style.opacity=show;l.style.opacity=show;}
+const PROT=new Set(EDGES.filter(e=>e[3]).map(e=>e[0]));
+build('g2',['c.lee','payroll']);build('g3',['c.lee','payroll']);build('g4',['c.lee','wiki']);
+
+/* ---------- scene 3 steps, straight from the recorded trace ---------- */
+const chips=a=>(a||[]).join(' · ');
+const STEPS=[];
+for(const ev of PAYROLL.events){
+  if(ev.kind==='tool'){const o=ev.out;let a={};try{a=JSON.parse(ev.args)}catch(e){}
+    if(ev.name==='inspect_access')STEPS.push({k:`inspect_access → ${o.paths.length} routes`,s:o.paths.map(p=>p.join('›')).join('   '),c:'',fx:{route:o.paths.flat()}});
+    else if(ev.name==='evaluate_plan')STEPS.push({k:`evaluate_plan [${chips(a.edge_ids)}]`,s:o.ok?'accepted by the validator':o.reasons.join(' · '),c:o.ok?'ok':'no'});
+    else if(ev.name==='apply_plan')STEPS.push(o.status==='APPLIED'?{k:'apply_plan → APPLIED',s:`disabled ${chips(o.cut)} · rev ${o.from_rev}→${o.to_rev}`,c:'ok',fx:{cut:o.cut}}
+                                                                 :{k:'apply_plan → REJECTED',s:o.reasons.join(' · '),c:'no'});
+    else if(ev.name==='verify')STEPS.push({k:`verify → ${o.status}`,s:'no route left · Training and a.kim kept',c:'ok'});
+  } else if(ev.kind==='inject')STEPS.push({k:'Outside change: new grant',s:`${ev.edge}: ${ev.src} → ${ev.dst} · rev ${ev.rev}`,c:'inj',fx:{inj:ev.edge}});
+}
+$('trace').innerHTML=STEPS.map((s,i)=>`<div class="step ${s.c}" id="st${i}"><div class="k">${s.k}</div><div class="s">${s.s}</div></div>`).join('')+
+  `<div><span class="badge el" id="s3done">${PAYROLL.result.status} · verified on the graph</span></div>`;
+const T3=STEPS.map((_,i)=>23.5+i*4.2);  // one step every 4.2 s
+
+/* scene 4 text, from the wiki trace */
+const said=WIKI.events.find(e=>e.kind==='model').text;
+$('s4b').innerHTML=`Only route: <span class="sky">e7 › e8</span>, both protected. &nbsp;Agent: <span class="sky">“${said.split(':')[0]}”</span> · graph unchanged`;
+
+function render(t){
+  for(const [id,a,b] of SCENES){const o=Math.min(clamp((t-a)/0.7),clamp((b-t)/0.7));const el=$(id);
+    const v=(a===0&&t<0.7)?1:o;el.style.opacity=v;el.style.visibility=v>0?'visible':'hidden';}
+  // 1
+  rise('s1a',t,0.3,1.2,60);rise('s1b',t,1.7);rise('s1c',t,3,0.9,0);
+  // 2 — the three routes light up one by one
+  rise('s2a',t,7.4);rise('s2b',t,9,0.9,0);rise('g2',t,7.9,1,20);
+  const R=[['e1'],['e2','e3','e4'],['e5','e6']],names=['a direct grant','nested groups','an assumable service account'];
+  const lit=t<10?0:t<12.5?1:t<15?2:3;
+  for(const [id] of EDGES){const r=R.slice(0,lit).flat().includes(id);paint('g2',id,r?'route':PROT.has(id)?'prot':'base',id==='e20'?0:1);}
+  $('s2n').textContent=lit?names.slice(0,lit).join(', ')+(lit===3?'.':'…'):'…';
+  // 3 — replay
+  rise('s3a',t,21.4);rise('s3c',t,22,0.9,0);
+  let route=[],cut=[],inj=null;
+  STEPS.forEach((s,i)=>{rise('st'+i,t,T3[i],0.6,24);if(t>=T3[i]&&s.fx){if(s.fx.route)route=s.fx.route;if(s.fx.cut)cut=s.fx.cut;if(s.fx.inj)inj=s.fx.inj;}});
+  rise('s3done',t,T3[T3.length-1]+2.2,0.7,20);
+  for(const [id] of EDGES){const st=cut.includes(id)?'cut':id===inj?'inj':route.includes(id)?'route':PROT.has(id)?'prot':'base';
+    paint('g3',id,st,id==='e20'&&!inj?0:1);}
+  // 4
+  rise('s4a',t,55.4);rise('g4',t,56,1,20);rise('s4b',t,58.5);
+  for(const [id] of EDGES)paint('g4',id,(id==='e7'||id==='e8')&&t>57.2?'route':PROT.has(id)?'prot':'base',id==='e20'?0:1);
+  // 5
+  rise('s5a',t,66.4);rise('s5b',t,67.4,1,40);rise('s5c',t,70);
+  // 6
+  rise('s6a',t,76.4);rise('s6b',t,77.6,1,40);rise('s6c',t,80);rise('s6d',t,81,0.9,0);
+}
+window.DURATION=DURATION;window.render=render;
+if(!new URLSearchParams(location.search).has('record')){const t0=performance.now();(function loop(n){render(((n-t0)/1000)%DURATION);requestAnimationFrame(loop);})(t0);}
+else render(0);
+</script>
+</body>
+</html>
